@@ -1,0 +1,31 @@
+.text {
+  letter-spacing: -0.64px;
+  font-weight: 300;
+  font-kerning: none;
+  line-height: 100%;
+  text-transform: uppercase;
+}
+
+.textGroup {
+  letter-spacing: -0.64px;
+  font-weight: 300;
+  font-kerning: none;
+  line-height: 100%;
+  text-transform: uppercase;
+  transition: color 0.1s ease-out;
+}
+
+.line {
+  overflow: hidden;
+  display: inline-block;
+  opacity: 1;
+}
+
+.quote {
+  line-height: 120%;
+}
+
+.signature {
+  letter-spacing: 1.08px;
+  text-transform: uppercase;
+}

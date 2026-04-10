@@ -1,0 +1,246 @@
+@import "./fonts.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Même logique que @theme + body dans richardmille */
+:root {
+  --font-rm-sans: "RM Sans", sans-serif;
+  --font-rm-mono: "RM Mono", monospace;
+  --font-rm-semi-mono: "RM Semi Mono", monospace;
+  --vh: 1vh;
+  --min-h-screen-stable: calc((var(--vh, 1vh) * 100) + 2px);
+}
+
+/* richardmille @layer base — taille de base fluide (les rem du design system) */
+@layer base {
+  :root {
+    font-size: calc(10 * (100vw / 390));
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      font-size: calc(10 * (100vw / 800));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      font-size: calc(10 * (100vw / 1440));
+    }
+  }
+
+  @media (min-width: 1440px) {
+    :root {
+      font-size: calc(10 * (100vw / 1440));
+    }
+  }
+
+  @media (min-width: 1680px) {
+    :root {
+      font-size: calc(10 * (100vw / 1680));
+    }
+  }
+
+  @media (min-width: 1800px) {
+    :root {
+      font-size: calc(10 * (100vw / 1800));
+    }
+  }
+
+  @media (min-width: 1920px) {
+    :root {
+      font-size: calc(10 * (100vw / 1920));
+    }
+  }
+
+  body {
+    font-family: var(--font-rm-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .font-rm-sans {
+    font-family: var(--font-rm-sans);
+  }
+  .font-rm-mono {
+    font-family: var(--font-rm-mono);
+  }
+  .font-rm-semi-mono {
+    font-family: var(--font-rm-semi-mono);
+  }
+
+  /* Copié depuis richardmille/src/app/tailwind.css */
+  .title-xxlarge {
+    @apply leading-[100%] font-light;
+    font-size: max(4.8rem, 48px);
+    letter-spacing: 0.09em;
+  }
+
+  @media (min-width: 1024px) {
+    .title-xxlarge {
+      font-size: max(8rem, 80px);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .title-xxlarge {
+      font-size: 80px;
+    }
+  }
+
+
+  .title-large-medium {
+    @apply leading-[100%] font-light;
+    font-size: 40px;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 1024px) {
+    .title-large-medium {
+      font-size: 40px;
+    }
+  }
+
+  .title-large-small {
+    @apply leading-none font-light;
+    font-size: 32px;
+    letter-spacing: -0.32px;
+  }
+  @media (min-width: 1024px) {
+    .title-large-small {
+      font-size: max(4.8rem, 48px);
+      letter-spacing: 0.09em;
+    }
+  }
+  @media (min-width: 1440px) {
+    .title-large-small {
+      font-size: 48px;
+      letter-spacing: 0.432px;
+    }
+  }
+  .label-large {
+    @apply leading-[100%] font-rm-mono;
+    font-size: 12px;
+  }
+
+  .label-small {
+    @apply leading-[110%] font-rm-semi-mono;
+    font-size: max(1rem, 10px);
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 1440px) {
+    .label-small {
+      font-size: 13px;
+    }
+  }
+
+  .text-12 {
+    font-size: 1.2rem;
+  }
+
+  .title-medium {
+    @apply leading-[100%] font-light;
+    font-size: max(3.2rem, 32px);
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 1024px) {
+    .title-medium {
+      font-size: max(4rem, 40px);
+    }
+  }
+  @media (min-width: 1440px) {
+    .title-medium {
+      font-size: 40px;
+    }
+  }
+
+  .body-medium-edito {
+    @apply leading-[140%] font-rm-sans;
+    font-size: max(1.6rem, 16px);
+    letter-spacing: -0.04em;
+  }
+  @media (min-width: 1440px) {
+    .body-medium-edito {
+      font-size: 16px;
+    }
+  }
+
+  .cta-large {
+    @apply font-rm-mono leading-[100%];
+    font-size: max(1.4rem, 14px);
+    letter-spacing: -0.02em;
+  }
+
+  .headline-medium {
+    @apply font-light leading-none;
+    font-size: max(4.8rem, 48px);
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 1440px) {
+    .headline-medium {
+      font-size: 48px;
+    }
+  }
+
+  .headline-large {
+    @apply leading-[0.9] font-light;
+    font-size: max(4rem, 40px);
+    letter-spacing: 0.05em;
+  }
+  @media (min-width: 1024px) {
+    .headline-large {
+      font-size: max(7.2rem, 72px);
+    }
+  }
+  @media (min-width: 1440px) {
+    .headline-large {
+      font-size: 72px;
+    }
+  }
+}
+
+html.js .anim-invisible {
+  opacity: 0;
+}
+
+.min-h-screen-stable {
+  min-height: var(--min-h-screen-stable);
+}
+
+/* Hauteur viewport stable (vidéo plein écran type BlockVideo) */
+.h-screen-stable {
+  height: var(--min-h-screen-stable);
+  min-height: var(--min-h-screen-stable);
+}
+
+@media (min-width: 1024px) {
+  .md-h-screen-stable {
+    height: var(--min-h-screen-stable);
+  }
+
+  .md-max-h-screen-stable {
+    max-height: var(--min-h-screen-stable);
+  }
+}
+
+.product-radial-gradient {
+  background: radial-gradient(
+    43.61% 55.48% at 48.68% 46.22%,
+    var(--background-color-from) 0%,
+    #080808 100%
+  );
+}
+
+@media (max-width: 768px) {
+  .product-radial-gradient {
+    background: radial-gradient(
+      71.53% 37.04% at 50% 47.92%,
+      var(--background-color-from) 15.38%,
+      #080808 100%
+    );
+  }
+}

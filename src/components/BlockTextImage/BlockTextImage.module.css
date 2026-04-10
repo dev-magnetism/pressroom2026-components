@@ -1,0 +1,14 @@
+/* richardmille — styles aplatis pour compat module CSS */
+.description ul {
+  list-style: disc;
+  padding-left: 16px;
+  margin-top: 16px;
+}
+
+.description li::marker {
+  font-size: 7px;
+}
+
+.description p + p {
+  margin-top: 10px;
+}

@@ -1,0 +1,73 @@
+/* Aligné sur next/font/local dans richardmille/src/app/[locale]/layout.tsx */
+
+@font-face {
+  font-family: "RM Sans";
+  src: url("/fonts/RM_SANS/RMSans-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Sans";
+  src: url("/fonts/RM_SANS/RMSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Sans";
+  src: url("/fonts/RM_SANS/RMSans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Mono";
+  src: url("/fonts/RM_MONO/RM_MONO-light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Mono";
+  src: url("/fonts/RM_MONO/RM_MONO-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Mono";
+  src: url("/fonts/RM_MONO/RM_MONO-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Semi Mono";
+  src: url("/fonts/RM_MONO/RM_SEMI_MONO-light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Semi Mono";
+  src: url("/fonts/RM_MONO/RM_SEMI_MONO-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RM Semi Mono";
+  src: url("/fonts/RM_MONO/RM_SEMI_MONO-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

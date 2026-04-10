@@ -1,0 +1,30 @@
+.emblaBottom {
+  overflow: hidden;
+}
+
+.emblaBottom__container {
+  display: flex;
+}
+
+.emblaBottom__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  margin-right: 16px;
+}
+
+.emblaRight {
+  overflow: hidden;
+}
+
+.emblaRight__container {
+  display: flex;
+  flex-direction: column;
+  touch-action: pan-y pinch-zoom;
+  gap: 8px;
+}
+
+.emblaRight__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  cursor: pointer;
+}
