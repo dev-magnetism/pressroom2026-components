@@ -6,7 +6,12 @@ const QUOTE_TEXT =
 export function BlockQuoteDemo() {
   return (
     <div className="w-full bg-neutral-100">
-      <BlockQuote quote={QUOTE_TEXT} signature="Richard Mille" />
+      <BlockQuote
+        quote={QUOTE_TEXT}
+        signature="Richard Mille"
+        signatureSubtitle="Technical director"
+        scrollRevealColor="#E35301"
+      />
     </div>
   );
 }

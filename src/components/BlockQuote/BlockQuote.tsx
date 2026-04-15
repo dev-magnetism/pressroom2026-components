@@ -14,17 +14,29 @@ if (typeof window !== "undefined") {
 type BlockQuoteProps = {
   quote: string;
   signature?: string;
+  signatureSubtitle?: string;
   titleIndent?: boolean;
   signatureColor?: "white" | "black";
   className?: string;
+  /**
+   * Couleur de surlignage atteinte pendant le scroll (scrub). Le texte démarre
+   * avec sa couleur de base (quoteColor ou couleur CSS) et se teinte vers cette valeur.
+   * Sans cette prop, seule l’opacité est animée (comportement d’origine).
+   */
+  scrollRevealColor?: string;
+  /** Couleur finale du texte de la citation. Si absent, couleur issue des classes (ex. text-primary-black). */
+  quoteColor?: string;
 };
 
 export function BlockQuote({
   quote,
   signature,
+  signatureSubtitle,
   titleIndent = false,
   signatureColor = "black",
   className,
+  scrollRevealColor,
+  quoteColor,
 }: BlockQuoteProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLElement>(null);
@@ -50,18 +62,35 @@ export function BlockQuote({
 
     splitRef.current = split;
 
-    tweenRef.current = gsap.from(split.words, {
-      opacity: 0.1,
-      duration: 0.9,
-      stagger: 0.1,
-      ease: "power2.inOut",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 50%",
-        end: "bottom 90%",
-        scrub: true,
-      },
-    });
+    const scrollTrigger = {
+      trigger: sectionRef.current,
+      start: "top 50%",
+      end: "bottom 90%",
+      scrub: true,
+    };
+
+    if (scrollRevealColor) {
+      tweenRef.current = gsap.fromTo(
+        split.words,
+        { opacity: 0.1, color: scrollRevealColor },
+        {
+          opacity: 1,
+          color: scrollRevealColor,
+          duration: 0.9,
+          stagger: 0.1,
+          ease: "power2.inOut",
+          scrollTrigger,
+        }
+      );
+    } else {
+      tweenRef.current = gsap.from(split.words, {
+        opacity: 0.1,
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power2.inOut",
+        scrollTrigger,
+      });
+    }
 
     return () => {
       tweenRef.current?.scrollTrigger?.kill();
@@ -78,7 +107,7 @@ export function BlockQuote({
         gsap.killTweensOf(textRef.current);
       }
     };
-  }, [quote]);
+  }, [quote, scrollRevealColor, quoteColor]);
 
   return (
     <section
@@ -94,24 +123,40 @@ export function BlockQuote({
             <Typography
               ref={textRef}
               variant="title-large-small"
-              className={cn(styles.text, "text-primary-black")}
+              className={cn(styles.text, !quoteColor && "text-primary-black")}
+              style={quoteColor ? { color: quoteColor } : undefined}
               as="p"
             >
               {quote}
             </Typography>
           </div>
 
-          {signature ? (
-            <CustomButton
-              variant="outline"
-              className={cn(
-                "mt-24 md:mt-40 flex items-center border border-primary-black/10 w-fit pointer-events-auto hover:bg-white cursor-auto",
-                signatureColor === "white" ? "text-white" : "text-primary-black",
-                styles.signature
-              )}
-            >
-              {signature}
-            </CustomButton>
+          {signature || signatureSubtitle ? (
+            <div className="mt-24 md:mt-40 w-fit">
+              {signature ? (
+                <CustomButton
+                  variant="outline"
+                  className={cn(
+                    "flex items-center border border-primary-black/10 w-fit pointer-events-auto hover:bg-white cursor-auto",
+                    signatureColor === "white" ? "text-white" : "text-primary-black",
+                    styles.signature
+                  )}
+                >
+                  {signature}
+                </CustomButton>
+              ) : null}
+              {signatureSubtitle ? (
+                <p
+                  className={cn(
+                    "mt-8 font-rm-mono uppercase leading-none text-[8px]",
+                    signatureColor === "white" ? "text-white" : "text-primary-black",
+                    styles.signature
+                  )}
+                >
+                  {signatureSubtitle}
+                </p>
+              ) : null}
+            </div>
           ) : null}
         </div>
       </div>
