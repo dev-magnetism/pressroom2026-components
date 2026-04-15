@@ -5,13 +5,7 @@ import { CustomButton } from "@/components/ui/CustomButton";
 import { cn } from "@/lib/cn";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  memo,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, memo } from "react";
 import { storyblokImageSrc } from "./storyblokImage";
 import type { HeroVariationData } from "./types";
 
@@ -23,10 +17,17 @@ const defaultLabels: ProductHeroLabels = {
   characteristics: "Caractéristiques",
 };
 
+const PRODUCT_HERO_INTERNAL_ID = "product-hero";
+
 export type ProductHeroProps = {
-  variations: HeroVariationData[];
-  /** Si absent, la première variation est utilisée. */
-  selectedVariationId?: string | null;
+  title: string;
+  subhead: string;
+  /** Couleur du dégradé radial (hex, ex. #8B0000). */
+  backgroundColorFrom: string;
+  imageFilename?: string;
+  imageAlt?: string;
+  imageMobileFilename?: string;
+  imageMobileAlt?: string;
   hasCharacteristics?: boolean;
   onCharacteristicsClick?: () => void;
   labels?: Partial<ProductHeroLabels>;
@@ -88,7 +89,14 @@ const ProductHeroContent = memo<ContentProps>(
       if (imgRef.current?.complete) {
         revealImage();
       }
-    }, [selected.id, revealImage]);
+    }, [
+      selected.title,
+      selected.subhead,
+      selected.backgroundColorFrom,
+      selected.image?.filename,
+      selected.imageMobile?.filename,
+      revealImage,
+    ]);
 
     useEffect(() => {
       if (imgRef.current?.complete) {
@@ -203,23 +211,51 @@ function normalizeHex(color: string): string {
   return color;
 }
 
-export const ProductHero: React.FC<ProductHeroProps> = ({
-  variations,
-  selectedVariationId,
-  hasCharacteristics = false,
-  onCharacteristicsClick,
-  labels: labelsProp,
-}) => {
+function propsToHeroData(p: ProductHeroProps): HeroVariationData {
+  const {
+    title,
+    subhead,
+    backgroundColorFrom,
+    imageFilename,
+    imageAlt = "",
+    imageMobileFilename,
+    imageMobileAlt,
+  } = p;
+
+  const image =
+    imageFilename !== undefined && imageFilename !== ""
+      ? { filename: imageFilename, alt: imageAlt }
+      : undefined;
+
+  const imageMobile =
+    imageMobileFilename !== undefined && imageMobileFilename !== ""
+      ? {
+          filename: imageMobileFilename,
+          alt: imageMobileAlt ?? imageAlt,
+        }
+      : undefined;
+
+  return {
+    id: PRODUCT_HERO_INTERNAL_ID,
+    title,
+    subhead,
+    backgroundColorFrom,
+    image,
+    imageMobile,
+  };
+}
+
+export const ProductHero: React.FC<ProductHeroProps> = props => {
+  const {
+    hasCharacteristics = false,
+    onCharacteristicsClick,
+    labels: labelsProp,
+  } = props;
+
   const backgroundRef = useRef<HTMLDivElement>(null);
   const labels = { ...defaultLabels, ...labelsProp };
 
-  const selected = useMemo(() => {
-    if (!variations.length) {
-      throw new Error("ProductHero: au moins une variation est requise.");
-    }
-    const found = variations.find(v => v.id === selectedVariationId);
-    return found ?? variations[0];
-  }, [variations, selectedVariationId]);
+  const selected = propsToHeroData(props);
 
   useGSAP(() => {
     if (!backgroundRef.current) return;
