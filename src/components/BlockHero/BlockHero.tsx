@@ -1,4 +1,4 @@
-import styles from "./ProductHero.module.css";
+import styles from "./BlockHero.module.css";
 import { Typography } from "@/components/ui/Typography";
 import { HeroMaskedBlock } from "./HeroMaskedBlock";
 import { CustomButton } from "@/components/ui/CustomButton";
@@ -9,17 +9,17 @@ import React, { useCallback, useEffect, useMemo, useRef, memo } from "react";
 import { storyblokImageSrc } from "./storyblokImage";
 import type { HeroVariationData } from "./types";
 
-export type ProductHeroLabels = {
+export type BlockHeroLabels = {
   characteristics: string;
 };
 
-const defaultLabels: ProductHeroLabels = {
+const defaultLabels: BlockHeroLabels = {
   characteristics: "Caractéristiques",
 };
 
-const PRODUCT_HERO_INTERNAL_ID = "product-hero";
+const BLOCK_HERO_INTERNAL_ID = "block-hero";
 
-export type ProductHeroProps = {
+export type BlockHeroProps = {
   title: string;
   subhead: string;
   /** Couleur du dégradé radial (hex, ex. #8B0000). */
@@ -30,17 +30,17 @@ export type ProductHeroProps = {
   imageMobileAlt?: string;
   hasCharacteristics?: boolean;
   onCharacteristicsClick?: () => void;
-  labels?: Partial<ProductHeroLabels>;
+  labels?: Partial<BlockHeroLabels>;
 };
 
 type ContentProps = {
   selected: HeroVariationData;
   hasCharacteristics: boolean;
   onCharacteristicsClick?: () => void;
-  labels: ProductHeroLabels;
+  labels: BlockHeroLabels;
 };
 
-const ProductHeroContent = memo<ContentProps>(
+const BlockHeroContent = memo<ContentProps>(
   ({
     selected,
     onCharacteristicsClick,
@@ -204,14 +204,14 @@ const ProductHeroContent = memo<ContentProps>(
   }
 );
 
-ProductHeroContent.displayName = "ProductHeroContent";
+BlockHeroContent.displayName = "BlockHeroContent";
 
 function normalizeHex(color: string): string {
   if (!color || color === "#f40000" || color === "") return "#292929";
   return color;
 }
 
-function propsToHeroData(p: ProductHeroProps): HeroVariationData {
+function propsToHeroData(p: BlockHeroProps): HeroVariationData {
   const {
     title,
     subhead,
@@ -236,7 +236,7 @@ function propsToHeroData(p: ProductHeroProps): HeroVariationData {
       : undefined;
 
   return {
-    id: PRODUCT_HERO_INTERNAL_ID,
+    id: BLOCK_HERO_INTERNAL_ID,
     title,
     subhead,
     backgroundColorFrom,
@@ -245,7 +245,7 @@ function propsToHeroData(p: ProductHeroProps): HeroVariationData {
   };
 }
 
-export const ProductHero: React.FC<ProductHeroProps> = props => {
+export const BlockHero: React.FC<BlockHeroProps> = props => {
   const {
     hasCharacteristics = false,
     onCharacteristicsClick,
@@ -292,7 +292,7 @@ export const ProductHero: React.FC<ProductHeroProps> = props => {
         <div className="product-radial-gradient absolute inset-0" />
       </div>
       <div className={cn(styles.content, "flex-1")}>
-        <ProductHeroContent
+        <BlockHeroContent
           selected={selected}
           onCharacteristicsClick={onCharacteristicsClick}
           hasCharacteristics={hasCharacteristics}
@@ -303,4 +303,4 @@ export const ProductHero: React.FC<ProductHeroProps> = props => {
   );
 };
 
-export default ProductHero;
+export default BlockHero;

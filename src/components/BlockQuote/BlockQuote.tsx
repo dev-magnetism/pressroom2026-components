@@ -5,13 +5,13 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import styles from "./BlokQuote.module.css";
+import styles from "./BlockQuote.module.css";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(SplitText, ScrollTrigger);
 }
 
-type BlokQuoteProps = {
+type BlockQuoteProps = {
   quote: string;
   signature?: string;
   titleIndent?: boolean;
@@ -19,13 +19,13 @@ type BlokQuoteProps = {
   className?: string;
 };
 
-export function BlokQuote({
+export function BlockQuote({
   quote,
   signature,
   titleIndent = false,
   signatureColor = "black",
   className,
-}: BlokQuoteProps) {
+}: BlockQuoteProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLElement>(null);
   const splitRef = useRef<SplitText | null>(null);
@@ -119,4 +119,4 @@ export function BlokQuote({
   );
 }
 
-export default BlokQuote;
+export default BlockQuote;

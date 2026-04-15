@@ -37,7 +37,7 @@ export function BlockCharacteristicDemo() {
     <div className="w-full">
       <BlockCharacteristic
         title="CHARACTERISTICS"
-        column={2}
+        column={2} // 1, 2 ou 3
         items={ITEMS}
         disableAnimation
       />

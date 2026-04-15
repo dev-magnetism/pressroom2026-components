@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { ProductHeroDemo } from "@/demo/ProductHeroDemo";
-import { BlokQuoteDemo } from "@/demo/BlokQuoteDemo";
+import { BlockHeroDemo } from "@/demo/BlockHeroDemo";
+import { BlockQuoteDemo } from "@/demo/BlockQuoteDemo";
 import { BlockBlocDemo } from "@/demo/BlockBlocDemo";
 import { BlockTextImageDemo } from "@/demo/BlockTextImageDemo";
 import { BlockSliderImageDemo } from "@/demo/BlockSliderImageDemo";
@@ -24,8 +24,8 @@ export default function App() {
 
   return (
     <div className="antialiased">
-      <ProductHeroDemo />
-      <BlokQuoteDemo />
+      <BlockHeroDemo />
+      <BlockQuoteDemo />
       <BlockBlocDemo />
       <BlockTextImageDemo />
       <BlockSliderImageDemo />
