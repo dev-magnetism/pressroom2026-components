@@ -1,0 +1,28 @@
+.richText {
+  ul {
+    list-style: none;
+    padding-left: 16px;
+
+    li {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 8px;
+        width: 3px;
+        height: 3px;
+        background-color: currentColor;
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding-left: 24px;
+    }
+  }
+
+  span {
+    color: rgba(22, 22, 22, 0.5) !important;
+  }
+}

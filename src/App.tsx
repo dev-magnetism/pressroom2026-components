@@ -6,6 +6,7 @@ import { BlockTextImageDemo } from "@/demo/BlockTextImageDemo";
 import { BlockSliderImageDemo } from "@/demo/BlockSliderImageDemo";
 import { BlockVideoDemo } from "@/demo/BlockVideoDemo";
 import { BlockWatchesSlideDemo } from "@/demo/BlockWatchesSlideDemo";
+import { BlockCharacteristicDemo } from "@/demo/BlockCharacteristicDemo";
 
 export default function App() {
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function App() {
       <BlockBlocDemo />
       <BlockTextImageDemo />
       <BlockSliderImageDemo />
+      <BlockCharacteristicDemo />
       <BlockVideoDemo />
       <BlockWatchesSlideDemo />
     </div>
