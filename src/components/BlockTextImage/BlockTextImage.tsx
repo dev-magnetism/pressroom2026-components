@@ -5,6 +5,10 @@ import styles from "./BlockTextImage.module.css";
 export type BlockTextImageLayout = "top" | "center" | "bottom";
 
 export type BlockTextImageProps = {
+  /** Fond de la section (couleur CSS). Défaut : blanc. */
+  backgroundColor?: string;
+  /** Couleur du texte (titre + corps). Défaut : `primary-black` (noir typo du site). */
+  textColor?: string;
   /** `true` : image à gauche, texte à droite. `false` : texte à gauche, image à droite (comme Storyblok `image_left`). */
   imageLeft: boolean;
   title?: string;
@@ -19,6 +23,8 @@ export type BlockTextImageProps = {
 };
 
 export function BlockTextImage({
+  backgroundColor,
+  textColor,
   imageLeft,
   title,
   description,
@@ -30,6 +36,12 @@ export function BlockTextImage({
   className,
 }: BlockTextImageProps) {
   const isImageLeft = imageLeft;
+  const titleTypographyProps = textColor
+    ? { style: { color: textColor } as const }
+    : { color: "primary-black" as const };
+  const bodyTypographyProps = textColor
+    ? { style: { color: textColor } as const }
+    : { color: "primary-black" as const };
 
   const paragraphs = description
     .trim()
@@ -39,8 +51,11 @@ export function BlockTextImage({
 
   return (
     <section
+      style={backgroundColor ? { backgroundColor } : undefined}
       className={cn(
-        "s-blok-text-image w-full h-full py-48 min-h-[700px] md:h-[96vh] lg:h-[94vh] overflow-hidden relative bg-white text-primary-black",
+        "s-blok-text-image w-full h-full py-48 min-h-[700px] md:h-[96vh] lg:h-[94vh] overflow-hidden relative",
+        !backgroundColor && "bg-white",
+        !textColor && "text-primary-black",
         `layout-${layout}`,
         `image-${isImageLeft ? "left" : "right"}`,
         className
@@ -75,7 +90,7 @@ export function BlockTextImage({
           {title?.trim() ? (
             <Typography
               variant="title-large-medium"
-              color="primary-black"
+              {...titleTypographyProps}
               className={cn(
                 "text-start w-full",
                 !littleImageUrl && "mb-24 md:mb-56"
@@ -102,7 +117,7 @@ export function BlockTextImage({
             <Typography
               as="div"
               variant="body-medium-edito"
-              color="primary-black"
+              {...bodyTypographyProps}
               weight="regular"
             >
               {paragraphs.map((p, i) => (
