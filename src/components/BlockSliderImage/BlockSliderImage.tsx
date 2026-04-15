@@ -24,6 +24,10 @@ import {
 import styles from "./BlockSliderImage.module.css";
 
 export type BlockSliderImageProps = {
+  /** Fond de la section (couleur CSS). Défaut : `bg-primary-black`. */
+  backgroundColor?: string;
+  /** Couleur du texte du bloc (hors captions). */
+  textColor?: string;
   subtitle?: string;
   title: string;
   /** HTML (comme RichText rendu côté serveur). */
@@ -77,23 +81,28 @@ ProgressBar.displayName = "ProgressBar";
 
 const SliderContent = memo(
   ({
+    textColor,
     subtitle,
     title,
     description,
     contentId,
   }: {
+    textColor?: string;
     subtitle?: string;
     title: string;
     description?: string;
     contentId: string;
   }) => (
-    <div className="grid grid-cols-12 gap-16 md:gap-20 mb-24 md:mb-64 px-20 md:px-32">
+    <div
+      style={textColor ? ({ color: textColor } as CSSProperties) : undefined}
+      className="grid grid-cols-12 gap-16 md:gap-20 mb-24 md:mb-64 px-20 md:px-32"
+    >
       <div className="col-span-12 grid grid-cols-12 gap-16 md:gap-20">
         <div className="col-span-12 md:col-span-6">
           {subtitle ? (
             <span
               key={`slide-v2-subtitle-${contentId}`}
-              className="subtitle label-large text-white uppercase block"
+              className="subtitle label-large uppercase block"
             >
               {subtitle}
             </span>
@@ -103,7 +112,6 @@ const SliderContent = memo(
             variant="title-medium"
             as="h3"
             textTransform="uppercase"
-            color="white-gray"
             className="title"
           >
             {title}
@@ -113,7 +121,7 @@ const SliderContent = memo(
           {description ? (
             <div
               key={`description-slide-v2-${contentId}`}
-              className="text-white body-medium-edito"
+              className="body-medium-edito"
               dangerouslySetInnerHTML={{ __html: description }}
             />
           ) : null}
@@ -131,12 +139,16 @@ function SlideMedia({
   width,
   height,
   objectPosition,
+  caption,
+  captionColor = "white",
 }: {
   src: string;
   alt: string;
   width: number;
   height: number;
   objectPosition: string;
+  caption?: string;
+  captionColor?: "black" | "white";
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -171,11 +183,23 @@ function SlideMedia({
       ) : (
         <div className="h-full w-full bg-black/40" />
       )}
+      {caption?.trim() ? (
+        <span
+          className={cn(
+            "absolute bottom-12 left-12 md:bottom-16 md:left-16 label-small uppercase pointer-events-none",
+            captionColor === "black" ? "text-black" : "text-white"
+          )}
+        >
+          {caption}
+        </span>
+      ) : null}
     </div>
   );
 }
 
 export function BlockSliderImage({
+  backgroundColor,
+  textColor,
   subtitle,
   title,
   description,
@@ -332,20 +356,27 @@ export function BlockSliderImage({
   const sliderContent = useMemo(
     () => (
       <SliderContent
+        textColor={textColor}
         subtitle={subtitle}
         title={title}
         description={description}
         contentId={contentId}
       />
     ),
-    [subtitle, title, description, contentId]
+    [textColor, subtitle, title, description, contentId]
   );
 
   return (
     <section
       ref={elementRef}
+      style={
+        backgroundColor
+          ? ({ backgroundColor } as CSSProperties)
+          : undefined
+      }
       className={cn(
-        "s-blok-slider-image bg-primary-black w-full py-80 md:py-128",
+        "s-blok-slider-image w-full py-80 md:py-128",
+        !backgroundColor && "bg-primary-black",
         isDragging ? "cursor-grabbing" : "cursor-grab",
         className
       )}
@@ -399,6 +430,8 @@ export function BlockSliderImage({
                       width={imageWidth}
                       height={imageHeight}
                       objectPosition={`${imageFocusPosition.left}% ${imageFocusPosition.top}%`}
+                      caption={slide.caption}
+                      captionColor={slide.captionColor}
                     />
                   ) : (
                     <div className="h-full w-full bg-black/40" />

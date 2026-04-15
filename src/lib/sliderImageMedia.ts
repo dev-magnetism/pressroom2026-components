@@ -3,6 +3,10 @@ export type SliderImageAsset = {
   filename?: string;
   alt?: string;
   focus?: string;
+  /** Légende affichée en bas à gauche de l'image. */
+  caption?: string;
+  /** Couleur de la légende. Défaut: white. */
+  captionColor?: "black" | "white";
 };
 
 /** Retourne l’URL telle quelle (hébergement média géré côté CMS). */
