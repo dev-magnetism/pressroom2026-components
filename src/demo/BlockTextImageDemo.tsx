@@ -11,6 +11,7 @@ const DESC =
 export function BlockTextImageDemo() {
   return (
     <div className="w-full bg-neutral-100">
+      {/* Props BlockTextImage: imageLeft*; description*; bigImageUrl*; title?; bigImageAlt?; littleImageUrl?; littleImageAlt?; layout? ("top" | "center" | "bottom", défaut "bottom"); backgroundColor? (défaut blanc); textColor? (défaut primary-black); className?. */}
       {/* Texte à gauche, image à droite (image_left = false) */}
       <BlockTextImage
         imageLeft={false}

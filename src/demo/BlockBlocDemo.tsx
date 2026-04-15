@@ -7,6 +7,7 @@ const IMAGE =
 export function BlockBlocDemo() {
   return (
     <div className="w-full bg-neutral-100">
+      {/* Props BlockBloc: subtitle?; title?; imageUrl?; imageAlt? (défaut ""); videoUrl?; videoUrlMobile?; textLeft?; textRight?; className?. */}
       <BlockBloc
         subtitle="Partnership"
         title="Charles Leclerc"

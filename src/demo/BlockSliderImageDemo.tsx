@@ -24,6 +24,7 @@ const DESCRIPTION =
 export function BlockSliderImageDemo() {
   return (
     <div className="w-full">
+      {/* Props BlockSliderImage: title*; images* (SliderImageAsset[]); subtitle?; description? (HTML); imagesSize? ("auto" | "default", défaut "default"); rtl? (défaut false); contentId? (défaut "block-slider-image"); className?. */}
       <BlockSliderImage
         subtitle="RM 30-01 Le Mans Classic"
         title="A shared passion on the track"

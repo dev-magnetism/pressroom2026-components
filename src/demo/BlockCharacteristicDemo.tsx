@@ -35,6 +35,7 @@ const ITEMS: CharacteristicItemData[] = [
 export function BlockCharacteristicDemo() {
   return (
     <div className="w-full">
+      {/* Props BlockCharacteristic: title*; items* (CharacteristicItemData[]); column? (1 | 2 | 3, défaut 3); disableAnimation? (défaut false); className?. */}
       <BlockCharacteristic
         title="CHARACTERISTICS"
         column={2} // 1, 2 ou 3

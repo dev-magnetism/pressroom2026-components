@@ -6,6 +6,7 @@ const VIDEO_URL =
 export function BlockVideoDemo() {
   return (
     <div className="w-full">
+      {/* Props BlockVideo: videoUrl*; videoUrlMobile?; eagerLoad? (défaut false); className?. */}
       <BlockVideo
         videoUrl={VIDEO_URL}
         videoUrlMobile={VIDEO_URL}

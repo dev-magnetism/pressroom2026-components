@@ -6,6 +6,7 @@ const QUOTE_TEXT =
 export function BlockQuoteDemo() {
   return (
     <div className="w-full bg-neutral-100">
+      {/* Props BlockQuote: quote*; signature?; signatureSubtitle?; titleIndent? (défaut false); signatureColor? ("white" | "black", défaut "black"); scrollRevealColor?; quoteColor?; className?. */}
       <BlockQuote
         quote={QUOTE_TEXT}
         signature="Richard Mille"

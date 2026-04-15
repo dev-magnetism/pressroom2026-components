@@ -7,6 +7,7 @@ const BLOCK_HERO_IMAGE =
 export function BlockHeroDemo() {
   return (
     <div className="w-full bg-neutral-200">
+      {/* Props BlockHero: title*; subhead*; backgroundColorFrom*; imageFilename?; imageAlt?; imageMobileFilename?; imageMobileAlt?; hasCharacteristics? (défaut false); onCharacteristicsClick?; labels? ({ characteristics?: string }). */}
       <BlockHero
         title="RM 67-01"
         subhead="Automatic extra-flat"

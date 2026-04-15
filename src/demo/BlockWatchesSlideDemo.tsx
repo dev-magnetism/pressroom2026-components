@@ -66,6 +66,7 @@ const SLIDES: WatchesSlideItem[] = [
 export function BlockWatchesSlideDemo() {
   return (
     <div className="w-full bg-primary-black">
+      {/* Props BlockWatchesSlide: title*; slides* (WatchesSlideItem[]); backgroundUrl?; backgroundAlt? (défaut ""); modelsLabel? (défaut "models"); rtl? (défaut false); keyPrefix? (défaut "watches-slide"); className?. */}
       <BlockWatchesSlide
         title="Collection"
         slides={SLIDES}
