@@ -1,7 +1,6 @@
 import { useIsMobile } from "@/hooks/useIsMobile";
 import MouseHelper from "@/lib/MouseHelper";
 import { cn } from "@/lib/cn";
-import { getMediaUrl } from "@/lib/sliderImageMedia";
 import gsap from "gsap";
 import {
   useCallback,
@@ -11,40 +10,38 @@ import {
   type CSSProperties,
 } from "react";
 
-/** Chemins `/fichier` (public Vite) avec `base` autre que `/` en prod. */
-function resolveVideoSrc(url: string): string {
-  const u = getMediaUrl(url) ?? url;
-  if (!u) return "";
-  if (/^https?:\/\//i.test(u)) return u;
-  if (u.startsWith("/")) {
-    const base = import.meta.env.BASE_URL ?? "/";
-    if (base === "/") return u;
-    return `${String(base).replace(/\/$/, "")}${u}`;
-  }
-  return u;
-}
-
 export type VideoPlayerLabels = {
   play: string;
   pause: string;
+  toggleAudio?: string;
 };
 
 export type VideoPlayerProps = {
   videoUrl: string;
   className?: string;
   autoPlay?: boolean;
+  hideControls?: boolean;
   loop?: boolean;
   muted?: boolean;
+  grayscale?: boolean;
+  onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
+  hideElements?: boolean;
   controls?: boolean;
+  showPlayButton?: boolean;
   showTimeline?: boolean;
   showAudioWaveform?: boolean;
+  subtitlesUrl?: string;
+  hideControlsOnHover?: boolean;
+  initialTime?: number;
   videoClassName?: string;
   labels?: VideoPlayerLabels;
 };
 
 const DEFAULT_LABELS: VideoPlayerLabels = {
-  play: "Play",
-  pause: "Pause",
+  play: "PLAY",
+  pause: "PAUSE",
+  toggleAudio: "Toggle audio",
 };
 
 const createInitialDefaultPolyline = (): string => {
@@ -99,11 +96,20 @@ export function VideoPlayer({
   videoUrl,
   className = "",
   autoPlay = false,
+  showPlayButton = true,
   loop = true,
   muted = true,
+  hideElements = false,
   controls: showControls = true,
+  grayscale = false,
+  onEnded,
+  onDurationChange,
   showTimeline = true,
   showAudioWaveform = true,
+  subtitlesUrl: _subtitlesUrl,
+  hideControls: _hideControls = false,
+  hideControlsOnHover = false,
+  initialTime,
   videoClassName,
   labels: labelsProp,
 }: VideoPlayerProps) {
@@ -119,6 +125,7 @@ export function VideoPlayer({
   const [hoverTime, setHoverTime] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
+  const hasTriggeredOnEnded = useRef(false);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -126,33 +133,42 @@ export function VideoPlayer({
   const gainNodeRef = useRef<GainNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const polylineRef = useRef<SVGPolylineElement | null>(null);
-  const timelineDragRef = useRef<HTMLDivElement | null>(null);
   const isIntersectingRef = useRef(false);
   const [polyPoints] = useState<string>(() => createInitialDefaultPolyline());
 
-  const src = resolveVideoSrc(videoUrl);
-
   const initAudioAnalyser = async () => {
     if (!videoRef.current || audioContextRef.current) return;
+
     try {
       const audioCtx = new AudioContext();
       const analyser = audioCtx.createAnalyser();
       const gainNode = audioCtx.createGain();
+
       const source = audioCtx.createMediaElementSource(videoRef.current);
+
       analyser.fftSize = 128;
       analyser.smoothingTimeConstant = 0.5;
+
       source.connect(analyser);
       analyser.connect(gainNode);
       gainNode.connect(audioCtx.destination);
+
       gainNode.gain.value = 0;
+
       videoRef.current.muted = false;
-      if (audioCtx.state === "suspended") await audioCtx.resume();
+
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
       audioContextRef.current = audioCtx;
       analyserRef.current = analyser;
       gainNodeRef.current = gainNode;
       sourceRef.current = source;
     } catch {
-      if (videoRef.current) videoRef.current.muted = true;
+      if (videoRef.current) {
+        videoRef.current.muted = true;
+      }
     }
   };
 
@@ -217,13 +233,32 @@ export function VideoPlayer({
 
   const handleTimeUpdate = () => {
     if (videoRef.current && !isNaN(videoRef.current.currentTime)) {
-      setCurrentTime(videoRef.current.currentTime);
+      const newTime = videoRef.current.currentTime;
+      const videoDuration = videoRef.current.duration;
+      setCurrentTime(newTime);
+
+      if (
+        videoDuration &&
+        !isNaN(videoDuration) &&
+        !hasTriggeredOnEnded.current
+      ) {
+        const progress = (newTime / videoDuration) * 100;
+        if (progress >= 98 && onEnded) {
+          hasTriggeredOnEnded.current = true;
+          onEnded();
+        }
+      }
     }
   };
 
   const handleLoadedMetadata = () => {
     if (videoRef.current && !isNaN(videoRef.current.duration)) {
       setDuration(videoRef.current.duration);
+      onDurationChange?.(videoRef.current.duration);
+      if (initialTime !== undefined && initialTime > 0) {
+        videoRef.current.currentTime = initialTime;
+        setCurrentTime(initialTime);
+      }
     }
   };
 
@@ -324,15 +359,21 @@ export function VideoPlayer({
       const v = videoRef.current;
       if (v) v.pause();
     };
-  }, [autoPlay, src]);
+  }, [autoPlay]);
 
   const handleToggleMute = async () => {
     if (!videoRef.current) return;
-    const newMuted = !isMuted;
-    setIsMuted(newMuted);
-    if (!newMuted) {
-      if (!audioContextRef.current) await initAudioAnalyser();
+
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+
+    if (!newMutedState) {
+      if (!audioContextRef.current) {
+        await initAudioAnalyser();
+      }
+
       videoRef.current.muted = false;
+
       if (videoRef.current.paused) {
         try {
           await videoRef.current.play();
@@ -340,31 +381,65 @@ export function VideoPlayer({
           return;
         }
       }
-      if (audioContextRef.current?.state === "suspended") {
+
+      if (
+        audioContextRef.current &&
+        audioContextRef.current.state === "suspended"
+      ) {
         await audioContextRef.current.resume();
       }
-      if (audioContextRef.current?.state !== "running") return;
-      if (gainNodeRef.current) gainNodeRef.current.gain.value = 1;
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+
+      if (audioContextRef.current?.state !== "running") {
+        return;
+      }
+
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.value = 1;
+      }
+
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
       analyzeAudio();
     } else {
-      if (!audioContextRef.current) videoRef.current.muted = true;
-      if (gainNodeRef.current) gainNodeRef.current.gain.value = 0;
-      if (polylineRef.current) {
-        polylineRef.current.setAttribute("points", createInitialDefaultPolyline());
+      if (audioContextRef.current) {
+      } else {
+        videoRef.current.muted = true;
       }
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.value = 0;
+      }
+
+      if (polylineRef.current) {
+        polylineRef.current.setAttribute(
+          "points",
+          createInitialDefaultPolyline()
+        );
+      }
+
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     }
   };
 
   const handleClick = (e: React.MouseEvent) => {
+    if (hideElements || hideControlsOnHover) return;
     if (!showControls) return;
+
     e.stopPropagation();
-    if ((e.target as Element)?.closest(".video-player--audio")) return;
+    if ((e.target as Element)?.closest(".video-player--audio")) {
+      return;
+    }
     const v = videoRef.current;
     if (!v) return;
-    if (v.paused) void v.play().catch(() => {});
-    else v.pause();
+    if (isPlaying) {
+      v.pause();
+    } else {
+      void v.play().catch(() => {});
+    }
+    setIsPlaying(!isPlaying);
   };
 
   /** Suit la souris adoucie (MouseHelper) comme sur le site RM. */
@@ -381,20 +456,22 @@ export function VideoPlayer({
   }, []);
 
   const handlePlayerMouseEnter = useCallback(() => {
+    if (hideElements || hideControlsOnHover) return;
     if (!showControls || isMobile) return;
     if (playPauseButtonRef.current) {
       playPauseButtonRef.current.style.opacity = "1";
       gsap.ticker.add(tickPlayPausePosition);
     }
-  }, [showControls, isMobile, tickPlayPausePosition]);
+  }, [showControls, isMobile, tickPlayPausePosition, hideElements, hideControlsOnHover]);
 
   const handlePlayerMouseLeave = useCallback(() => {
+    if (hideElements || hideControlsOnHover) return;
     if (!showControls || isMobile) return;
     if (playPauseButtonRef.current) {
       playPauseButtonRef.current.style.opacity = "0";
       gsap.ticker.remove(tickPlayPausePosition);
     }
-  }, [showControls, isMobile, tickPlayPausePosition]);
+  }, [showControls, isMobile, tickPlayPausePosition, hideElements, hideControlsOnHover]);
 
   useEffect(() => {
     if (isMobile) return;
@@ -434,12 +511,14 @@ export function VideoPlayer({
         }
       }
     }
-  }, [isTimelineHovered, showControls]);
+  }, [isTimelineHovered, showControls, hideControlsOnHover, hideElements]);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (!isDragging || !videoRef.current || duration <= 0) return;
-      const timelineElement = timelineDragRef.current;
+      const timelineElement = document.querySelector(
+        ".timeline-drag-area"
+      ) as HTMLDivElement;
       if (!timelineElement) return;
       const rect = timelineElement.getBoundingClientRect();
       const mouseY = e.clientY - rect.top;
@@ -462,11 +541,29 @@ export function VideoPlayer({
 
   useEffect(() => {
     const v = videoRef.current;
-    if (!v || !src) return;
+    if (!v) return;
     v.volume = 0.4;
-  }, [src]);
+  }, []);
 
-  if (!videoUrl || !src) return null;
+  useEffect(() => {
+    if (initialTime !== undefined && initialTime > 0 && videoRef.current) {
+      const video = videoRef.current;
+      const setTime = () => {
+        if (video.readyState >= 2) {
+          video.currentTime = initialTime;
+          setCurrentTime(initialTime);
+        }
+      };
+      if (video.readyState >= 2) {
+        setTime();
+      } else {
+        video.addEventListener("loadeddata", setTime, { once: true });
+        return () => video.removeEventListener("loadeddata", setTime);
+      }
+    }
+  }, [initialTime]);
+
+  if (!videoUrl) return null;
 
   return (
     <div
@@ -474,6 +571,7 @@ export function VideoPlayer({
       className={cn(
         "video-player max-h-dvh relative bg-primary-black",
         showControls ? "cursor-none" : "cursor-default",
+        hideElements && "cursor-auto",
         className
       )}
       onMouseEnter={
@@ -484,9 +582,60 @@ export function VideoPlayer({
       }
       onClick={showControls ? handleClick : undefined}
     >
+      {/* Vidéo en premier dans le DOM : les contrôles absolus se superposent au-dessus (même logique que RM, évite que la vidéo capte les clics). */}
+      <video
+        ref={videoRef}
+        className={cn(
+          "relative z-0 w-full object-cover pointer-events-none",
+          videoClassName
+        )}
+        style={{ pointerEvents: "none" }}
+        autoPlay={autoPlay}
+        playsInline
+        muted={isMuted}
+        loop={loop}
+        crossOrigin="anonymous"
+        onPlay={async () => {
+          setIsPlaying(true);
+          hasTriggeredOnEnded.current = false;
+          if (grayscale) {
+            gsap.to(videoPlayerRef.current, {
+              filter: "grayscale(0%)",
+              duration: 0.4,
+              ease: "power2.out",
+            });
+          }
+          if (!isMuted && !audioContextRef.current) {
+            await initAudioAnalyser();
+            if (gainNodeRef.current) {
+              gainNodeRef.current.gain.value = 1;
+            }
+            if (animationFrameRef.current) {
+              cancelAnimationFrame(animationFrameRef.current);
+            }
+            analyzeAudio();
+          }
+        }}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => {
+          setIsPlaying(false);
+          onEnded?.();
+        }}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onLoadStart={() => {}}
+        onCanPlay={() => {}}
+        onError={() => {}}
+      >
+        <source src={videoUrl} type="video/mp4" />
+      </video>
+
       {showTimeline && showControls && (
         <div
-          className="video-player--timeline flex gap-8 absolute left-12 md:left-0 md:pl-24 items-center top-1/2 -translate-y-1/2 z-[4] h-full cursor-pointer transition-opacity duration-600"
+          className={cn(
+            "video-player--timeline flex gap-8 absolute left-12 md:left-0 md:pl-24 items-center top-1/2 -translate-y-1/2 z-[4] h-full cursor-pointer transition-opacity duration-600",
+            hideElements && "opacity-0"
+          )}
           onMouseEnter={() => setIsTimelineHovered(true)}
           onMouseLeave={() => {
             setHoverTime(null);
@@ -497,13 +646,14 @@ export function VideoPlayer({
             <div
               className={cn(
                 "block md:hidden transition-opacity duration-200",
-                !isMobile && isTimelineHovered && "opacity-0"
+                !isMobile &&
+                  (isTimelineHovered || showPlayButton === false) &&
+                  "opacity-0"
               )}
             >
               {isPlaying ? <PauseGlyph /> : <PlayGlyph />}
             </div>
             <div
-              ref={timelineDragRef}
               className={cn(
                 "timeline-drag-area w-8 h-full relative cursor-pointer flex justify-center",
                 isDragging && "cursor-grabbing"
@@ -521,7 +671,10 @@ export function VideoPlayer({
               </div>
               {(hoverTime !== null || isDragging) && duration > 0 && (
                 <div
-                  className="absolute left-12 bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10"
+                  className={cn(
+                    "absolute left-12 bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10",
+                    isDragging && "bg-white text-black"
+                  )}
                   style={{
                     top: `${((hoverTime ?? currentTime) / duration) * 100}%`,
                     transform: "translateY(-50%)",
@@ -532,7 +685,7 @@ export function VideoPlayer({
               )}
             </div>
           </div>
-          <div className="text-xs font-rm-mono text-white font-medium -rotate-90 h-fit origin-center -translate-x-[3.4rem]">
+          <div className="text-8 font-rm-mono text-white font-medium -rotate-90 h-fit origin-center -translate-x-34">
             {formatTime(currentTime)} - {formatTime(duration)}
           </div>
         </div>
@@ -541,12 +694,17 @@ export function VideoPlayer({
       {showAudioWaveform && showControls && (
         <button
           type="button"
-          className="video-player--audio absolute h-full top-1/2 -translate-y-1/2 p-24 pr-12 cursor-pointer right-0 z-10 transition-opacity duration-600 w-[70px]"
-          aria-label="Son"
+          className={cn(
+            "video-player--audio pointer-events-auto absolute h-full top-1/2 -translate-y-1/2 p-24 pr-12 cursor-pointer right-0 z-10 transition-opacity duration-600 w-[70px]",
+            hideElements && "opacity-0 pointer-events-none"
+          )}
+          aria-label={labels.toggleAudio}
           onClick={e => {
             e.stopPropagation();
             void handleToggleMute();
           }}
+          onMouseEnter={() => handlePlayerMouseLeave()}
+          onMouseLeave={() => handlePlayerMouseEnter()}
         >
           <div className="-rotate-90">
             <svg width="70" height="10" aria-hidden>
@@ -563,49 +721,31 @@ export function VideoPlayer({
       )}
 
       {showControls ? (
-        <div className="absolute w-full h-full top-0 left-0 pointer-events-none z-[12] transition-opacity duration-600">
+        <div
+          className={cn(
+            "absolute w-full h-full top-0 left-0 pointer-events-none z-[12] transition-opacity duration-600",
+            (hideElements || hideControlsOnHover) &&
+              "opacity-0 pointer-events-none"
+          )}
+        >
           <div
             ref={playPauseButtonRef}
-            className="w-fit hidden md:flex h-fit opacity-0 absolute left-0 top-0 pointer-events-none flex-col items-center justify-center transition-opacity duration-300"
+            className={cn(
+              "w-fit hidden md:flex h-fit opacity-0 absolute left-0 top-0 pointer-events-none flex-col items-center justify-center transition-opacity duration-300",
+              isTimelineHovered && "opacity-0"
+            )}
           >
             {isPlaying ? (
               <PauseGlyph className="text-white" />
             ) : (
               <PlayGlyph className="text-white" />
             )}
-            <span className="text-xs uppercase font-rm-mono text-white font-medium mt-2">
+            <span className="font-small uppercase font-rm-mono text-white font-medium">
               {isPlaying ? labels.pause : labels.play}
             </span>
           </div>
         </div>
       ) : null}
-
-      <video
-        key={src}
-        ref={videoRef}
-        className={cn(
-          "w-full object-cover pointer-events-none",
-          videoClassName
-        )}
-        src={src}
-        autoPlay={autoPlay}
-        playsInline
-        muted={muted}
-        loop={loop}
-        preload="auto"
-        onPlay={async () => {
-          setIsPlaying(true);
-          if (!muted && !audioContextRef.current) {
-            await initAudioAnalyser();
-            if (gainNodeRef.current) gainNodeRef.current.gain.value = 1;
-            if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-            analyzeAudio();
-          }
-        }}
-        onPause={() => setIsPlaying(false)}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-      />
     </div>
   );
 }
