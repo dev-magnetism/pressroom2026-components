@@ -20,6 +20,9 @@ function useVideoMobileBreakpoint() {
   return isMobile;
 }
 
+/** Couleur du bloc titre / sous-titre (bas à gauche de la slide). */
+export type DiaporamaCaptionColor = "black" | "white";
+
 export type DiaporamaItem = {
   /** Identifiant stable (équivalent `_uid` Storyblok). */
   id: string;
@@ -29,6 +32,12 @@ export type DiaporamaItem = {
   /** Si défini : slide vidéo (équivalent `media_item` Storyblok avec vidéo). */
   videoUrl?: string;
   videoUrlMobile?: string;
+  /** Titre affiché en bas à gauche (token typo ~24). */
+  title?: string;
+  /** Sous-titre sous le titre (token typo ~13, police mono). */
+  subtitle?: string;
+  /** Couleur du texte du bloc légende (défaut `white`). */
+  captionColor?: DiaporamaCaptionColor;
 };
 
 export type DiaporamaLabels = {
@@ -467,6 +476,46 @@ export function Diaporama({
           )}
           aria-hidden
         />
+        {(() => {
+          const capItem = items[selectedIndex];
+          const capTitle = capItem?.title?.trim();
+          const capSubtitle = capItem?.subtitle?.trim();
+          if (!capTitle && !capSubtitle) return null;
+          const capVariant = capItem?.captionColor ?? "white";
+          const capText =
+            capVariant === "black" ? "text-primary-black" : "text-white";
+          return (
+            <div
+              key={`caption-${capItem.id}-${selectedIndex}`}
+              className={cn(styles.caption, dir === "rtl" && styles.captionRtl)}
+            >
+              {capTitle ? (
+                <p
+                  className={cn(
+                    styles.captionTitle,
+                    "block shrink-0 font-rm-sans font-normal uppercase tracking-wide",
+                    "text-[2.4rem]",
+                    capText
+                  )}
+                >
+                  {capTitle}
+                </p>
+              ) : null}
+              {capSubtitle ? (
+                <p
+                  className={cn(
+                    styles.captionSubtitle,
+                    "block shrink-0 font-rm-mono font-normal uppercase tracking-wide",
+                    "text-[1.3rem]",
+                    capText
+                  )}
+                >
+                  {capSubtitle}
+                </p>
+              ) : null}
+            </div>
+          );
+        })()}
         {items.map((item, index) => {
           const hasVideo = Boolean(item.videoUrl?.trim());
           const videoSrc = hasVideo
