@@ -256,6 +256,18 @@ html.js .anim-invisible {
   min-height: var(--min-h-screen-stable);
 }
 
+.max-h-screen-stable {
+  max-height: var(--min-h-screen-stable);
+}
+
+.cover-image-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
 @media (min-width: 1024px) {
   .md-h-screen-stable {
     height: var(--min-h-screen-stable);
