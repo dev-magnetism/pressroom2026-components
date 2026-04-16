@@ -1,4 +1,6 @@
+import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import { Typography } from "@/components/ui/Typography";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { cn } from "@/lib/cn";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -9,22 +11,12 @@ export type BlockBlocProps = {
   imageAlt?: string;
   videoUrl?: string;
   videoUrlMobile?: string;
+  /** `2` : deux colonnes côte à côte (défaut). `1` : une colonne, texte centré. */
+  textColumns?: 1 | 2;
   textLeft?: string;
   textRight?: string;
   className?: string;
 };
-
-function useIsNarrowMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    const apply = () => setIsMobile(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-  return isMobile;
-}
 
 export function BlockBloc({
   subtitle,
@@ -33,6 +25,7 @@ export function BlockBloc({
   imageAlt = "",
   videoUrl,
   videoUrlMobile,
+  textColumns = 2,
   textLeft,
   textRight,
   className,
@@ -41,7 +34,8 @@ export function BlockBloc({
   const shouldLoadVideoRef = useRef(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
-  const isMobile = useIsNarrowMobile();
+  /** Même breakpoint que richardmille (`useIsMobile`, max-width 475px). */
+  const isMobile = useIsMobile();
 
   const isVideo = Boolean(videoUrl || videoUrlMobile);
 
@@ -74,6 +68,11 @@ export function BlockBloc({
   const showImage = Boolean(imageUrl) && !isVideo;
   const showVideo = isVideo && shouldLoadVideo && videoSrc;
 
+  const hasTextLeft = Boolean(textLeft?.trim());
+  const hasTextRight = Boolean(textRight?.trim());
+  const hasText = hasTextLeft || hasTextRight;
+  const isSingleTextColumn = textColumns === 1;
+
   return (
     <section
       ref={sectionRef}
@@ -83,21 +82,25 @@ export function BlockBloc({
       )}
     >
       <div className="grid grid-cols-12 gap-16 md:gap-20">
-        {subtitle?.trim() ? (
-          <span className="col-span-12 text-center mx-auto uppercase text-12 font-rm-mono text-primary-black">
-            {subtitle}
-          </span>
-        ) : null}
-
         <div className="col-span-full md:col-span-full 2xl:col-span-8 2xl:col-start-3">
           {title?.trim() ? (
             <Typography
               variant="title-medium"
-              className="uppercase text-center font-light text-primary-black mx-auto pb-3"
+              className="!text-[48px] uppercase text-center font-light text-primary-black mx-auto"
               as="h2"
             >
               {title}
             </Typography>
+          ) : null}
+          {subtitle?.trim() ? (
+            <span
+              className={cn(
+                "block text-center uppercase text-[24px] font-light leading-[120%] tracking-[-0.24px] font-rm-mono text-primary-black",
+                title?.trim() && "mt-[20px]"
+              )}
+            >
+              {subtitle}
+            </span>
           ) : null}
         </div>
 
@@ -105,13 +108,16 @@ export function BlockBloc({
           <div className="col-span-12 md:col-span-8 md:col-start-3 my-44">
             {isVideo ? (
               showVideo ? (
-                <video
-                  className="w-full aspect-[353/600] md:aspect-[910/511] object-cover"
-                  src={videoSrc}
-                  controls
-                  muted
-                  loop
-                  playsInline
+                <VideoPlayer
+                  videoUrl={videoSrc}
+                  autoPlay={false}
+                  loop={true}
+                  muted={true}
+                  controls={true}
+                  showTimeline={true}
+                  showAudioWaveform={true}
+                  className="w-full aspect-[353/600] md:aspect-[910/511]"
+                  videoClassName="h-full"
                 />
               ) : (
                 <div
@@ -130,36 +136,65 @@ export function BlockBloc({
           </div>
         )}
 
-        <div className="col-span-12 md:col-span-8 md:col-start-3 2xl:col-span-6 2xl:col-start-4">
-          <div className="grid grid-cols-12 gap-16 md:gap-20">
-            {textLeft?.trim() ? (
-              <div className="col-span-12 md:col-span-6">
-                <Typography
-                  as="div"
-                  variant="body-medium-edito"
-                  color="primary-black"
-                  className="opacity-80"
-                  weight="regular"
-                >
-                  {textLeft}
-                </Typography>
+        {hasText ? (
+          <div className="col-span-12 md:col-span-8 md:col-start-3 2xl:col-span-6 2xl:col-start-4">
+            {isSingleTextColumn ? (
+              <div className="mx-auto flex w-full max-w-[500px] flex-col items-center gap-16 text-center md:gap-20">
+                {hasTextLeft ? (
+                  <Typography
+                    as="div"
+                    variant="body-medium-edito"
+                    color="primary-black"
+                    className="opacity-80"
+                    weight="regular"
+                  >
+                    {textLeft}
+                  </Typography>
+                ) : null}
+                {hasTextRight ? (
+                  <Typography
+                    as="div"
+                    variant="body-medium-edito"
+                    color="primary-black"
+                    className="opacity-80"
+                    weight="regular"
+                  >
+                    {textRight}
+                  </Typography>
+                ) : null}
               </div>
-            ) : null}
-            {textRight?.trim() ? (
-              <div className="col-span-12 md:col-span-6">
-                <Typography
-                  as="div"
-                  variant="body-medium-edito"
-                  color="primary-black"
-                  className="opacity-80"
-                  weight="regular"
-                >
-                  {textRight}
-                </Typography>
+            ) : (
+              <div className="grid grid-cols-12 gap-16 md:gap-20">
+                {hasTextLeft ? (
+                  <div className="col-span-12 md:col-span-6">
+                    <Typography
+                      as="div"
+                      variant="body-medium-edito"
+                      color="primary-black"
+                      className="opacity-80"
+                      weight="regular"
+                    >
+                      {textLeft}
+                    </Typography>
+                  </div>
+                ) : null}
+                {hasTextRight ? (
+                  <div className="col-span-12 md:col-span-6">
+                    <Typography
+                      as="div"
+                      variant="body-medium-edito"
+                      color="primary-black"
+                      className="opacity-80"
+                      weight="regular"
+                    >
+                      {textRight}
+                    </Typography>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
+            )}
           </div>
-        </div>
+        ) : null}
       </div>
     </section>
   );

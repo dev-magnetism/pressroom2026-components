@@ -362,34 +362,47 @@ export function VideoPlayer({
   }, [autoPlay]);
 
   const handleToggleMute = async () => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-    const newMutedState = !isMuted;
-    setIsMuted(newMutedState);
-
-    if (!newMutedState) {
+    if (isMuted) {
       if (!audioContextRef.current) {
         await initAudioAnalyser();
       }
 
-      videoRef.current.muted = false;
+      if (!audioContextRef.current) {
+        video.muted = false;
+        setIsMuted(false);
+        if (video.paused) {
+          try {
+            await video.play();
+          } catch {
+            setIsMuted(true);
+            video.muted = true;
+          }
+        }
+        return;
+      }
 
-      if (videoRef.current.paused) {
+      video.muted = false;
+
+      if (video.paused) {
         try {
-          await videoRef.current.play();
+          await video.play();
         } catch {
+          setIsMuted(true);
+          video.muted = true;
           return;
         }
       }
 
-      if (
-        audioContextRef.current &&
-        audioContextRef.current.state === "suspended"
-      ) {
+      if (audioContextRef.current.state === "suspended") {
         await audioContextRef.current.resume();
       }
 
-      if (audioContextRef.current?.state !== "running") {
+      if (audioContextRef.current.state !== "running") {
+        video.muted = true;
+        setIsMuted(true);
         return;
       }
 
@@ -401,11 +414,10 @@ export function VideoPlayer({
         cancelAnimationFrame(animationFrameRef.current);
       }
       analyzeAudio();
+      setIsMuted(false);
     } else {
-      if (audioContextRef.current) {
-      } else {
-        videoRef.current.muted = true;
-      }
+      setIsMuted(true);
+      video.muted = true;
 
       if (gainNodeRef.current) {
         gainNodeRef.current.gain.value = 0;
@@ -695,7 +707,7 @@ export function VideoPlayer({
         <button
           type="button"
           className={cn(
-            "video-player--audio pointer-events-auto absolute h-full top-1/2 -translate-y-1/2 p-24 pr-12 cursor-pointer right-0 z-10 transition-opacity duration-600 w-[70px]",
+            "video-player--audio pointer-events-auto absolute h-full top-1/2 -translate-y-1/2 p-24 pr-12 cursor-pointer right-0 z-[20] transition-opacity duration-600 w-[70px]",
             hideElements && "opacity-0 pointer-events-none"
           )}
           aria-label={labels.toggleAudio}

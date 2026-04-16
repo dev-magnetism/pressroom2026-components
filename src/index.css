@@ -9,6 +9,8 @@
   --font-rm-sans: "RM Sans", sans-serif;
   --font-rm-mono: "RM Mono", monospace;
   --font-rm-semi-mono: "RM Semi Mono", monospace;
+  --text-8: 0.8rem;
+  --text-11: 1.1rem;
   --vh: 1vh;
   --min-h-screen-stable: calc((var(--vh, 1vh) * 100) + 2px);
 }
@@ -138,6 +140,32 @@
     }
   }
 
+  .text-8 {
+    font-size: var(--text-8);
+  }
+
+  /* Miniatures BlockVariation : même source que richardmille — .text-11 doit venir APRÈS
+     .variation-name pour que font-size: var(--text-11) l’emporte (comme le bundle Tailwind RM). */
+  .variation-name {
+    @apply leading-[100%] font-rm-mono;
+    font-size: max(0.7rem, 9px);
+  }
+
+  @media (min-width: 1440px) {
+    .variation-name {
+      font-size: 10px;
+    }
+  }
+
+  .variation-subtitle {
+    @apply font-rm-sans leading-[120%];
+    font-size: 10px;
+  }
+
+  .text-11 {
+    font-size: var(--text-11);
+  }
+
   .text-12 {
     font-size: 1.2rem;
   }
@@ -155,6 +183,17 @@
   @media (min-width: 1440px) {
     .title-medium {
       font-size: 40px;
+    }
+  }
+
+  .body-medium {
+    @apply leading-[140%] font-rm-mono;
+    font-size: max(1.3rem, 13px);
+    letter-spacing: -0.05em;
+  }
+  @media (min-width: 1440px) {
+    .body-medium {
+      font-size: 13px;
     }
   }
 

@@ -6,7 +6,9 @@ const VARIANTS = {
   "title-large-small": "title-large-small",
   "title-large-medium": "title-large-medium",
   "title-medium": "title-medium",
+  "body-medium": "body-medium",
   "body-medium-edito": "body-medium-edito",
+  "label-large": "label-large",
   "label-small": "label-small",
 } as const;
 
@@ -15,7 +17,9 @@ const DEFAULT_ELEMENTS = {
   "title-large-small": "h2",
   "title-large-medium": "h2",
   "title-medium": "h2",
+  "body-medium": "p",
   "body-medium-edito": "div",
+  "label-large": "span",
   "label-small": "span",
 } as const;
 
