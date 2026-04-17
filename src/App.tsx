@@ -11,6 +11,7 @@ import { BlockCharacteristicDemo } from "@/demo/BlockCharacteristicDemo";
 import { BlockVariationDemo } from "@/demo/BlockVariationDemo";
 import { DiaporamaDemo } from "@/demo/DiaporamaDemo";
 import { KeyFiguresDemo } from "@/demo/KeyFiguresDemo";
+import { TextColumnsDemo } from "@/demo/TextColumnsDemo";
 
 export default function App() {
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function App() {
       <BlockVariationDemo />
       <BlockCharacteristicDemo />
       <KeyFiguresDemo />
+      <TextColumnsDemo />
       <DiaporamaDemo />
       <BlockVideoDemo />
       <BlockWatchesSlideDemo />

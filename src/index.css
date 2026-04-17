@@ -186,6 +186,18 @@
     }
   }
 
+  .title-xsmall {
+    @apply leading-[100%] font-light;
+    font-size: max(2.4rem, 24px);
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 1440px) {
+    .title-xsmall {
+      font-size: 24px;
+    }
+  }
+
   .body-medium {
     @apply leading-[140%] font-rm-mono;
     font-size: max(1.3rem, 13px);

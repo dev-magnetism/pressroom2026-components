@@ -10,7 +10,7 @@ const VIDEO_URL =
 
 export function BlockBlocDemo() {
   return (
-    <div className="w-full space-y-24 bg-neutral-100">
+    <div className="w-full">
       {/* Props : … ; textColumns?: 1 | 2 (défaut 2) ; textLeft? ; textRight? */}
       <BlockBloc
         subtitle="Partnership"
