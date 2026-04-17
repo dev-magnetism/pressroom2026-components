@@ -1,0 +1,99 @@
+.root {
+  --kf-bg: #ffffff;
+  --kf-fg: #161616;
+  background-color: var(--kf-bg);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+.subtitle {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  overflow-wrap: break-word;
+  text-transform: uppercase;
+  font-family: var(--font-rm-mono), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 400;
+  color: var(--kf-fg);
+  opacity: 0.58;
+}
+
+.figure {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  overflow-wrap: anywhere;
+  font-family: var(--font-rm-mono), ui-monospace, monospace;
+  font-size: 128px;
+  line-height: 0.95;
+  font-weight: 400;
+  letter-spacing: 11.5px;
+  color: var(--kf-fg);
+}
+
+@media (max-width: 1023px) {
+  .figure {
+    font-size: 80px;
+    letter-spacing: 6px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .figure {
+    overflow-wrap: normal;
+  }
+}
+
+/* Après la règle tablette : sous `sm` (820px), chiffre plus grand (viewport fluide). */
+@media (max-width: 819px) {
+  .figure {
+    font-size: clamp(3rem, 21vw, 5.75rem);
+    letter-spacing: clamp(0px, 1.1vw, 6px);
+  }
+}
+
+.description {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: min(250px, 100%);
+  align-self: center;
+  text-align: center;
+  overflow-wrap: break-word;
+  font-family: var(--font-rm-mono), ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  color: var(--kf-fg);
+}
+
+/* Après les `margin: 0` des enfants : espacement 16px entre blocs. */
+.item > * + * {
+  margin-top: 16px;
+}
+
+/* Pas de marge au-dessus du chiffre (sous le sous-titre). */
+.subtitle + .figure {
+  margin-top: 0;
+}
+
+/* Texte sous le chiffre : 16px au-dessus. */
+.figure + .description {
+  margin-top: 16px;
+}
