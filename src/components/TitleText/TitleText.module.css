@@ -1,0 +1,43 @@
+/* Aligné sur BlockTextImage.module.css — corps éditorial */
+.description ul {
+  list-style: disc;
+  padding-left: 16px;
+  margin-top: 16px;
+}
+
+.description li::marker {
+  font-size: 7px;
+}
+
+.description p + p {
+  margin-top: 10px;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-size: 72px;
+  letter-spacing: 3.6px;
+  font-weight: 300;
+  font-family: var(--font-rm-sans), ui-sans-serif, system-ui, sans-serif;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-size: 24px;
+  letter-spacing: -0.24px;
+  font-weight: 300;
+  font-family: var(--font-rm-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+}
