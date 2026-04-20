@@ -7,6 +7,11 @@ import type { WatchesSlideItem } from "./types";
 type WatchItemProps = {
   blok: WatchesSlideItem;
   withTitle?: boolean;
+  /**
+   * Avec `withTitle={false}` : image seule qui remplit le conteneur (sans texte).
+   * Sinon ratio miniature (vignette).
+   */
+  fillImage?: boolean;
   className?: string;
   theme?: "dark" | "light";
   isLink?: boolean;
@@ -17,25 +22,28 @@ type WatchItemProps = {
 export function WatchItem({
   blok,
   withTitle = false,
+  fillImage = false,
   className,
   theme = "dark",
   isLink = true,
   imageObjectFit = "cover",
 }: WatchItemProps) {
-  const { url: href } = getLinkUrl(`/${blok.full_slug}`);
+  const path = blok.full_slug ? `/${blok.full_slug}` : "#";
+  const { url: href } = getLinkUrl(path);
 
   const subtitle =
-    blok.content.hero && Array.isArray(blok.content.hero)
-      ? (blok.content.hero[0]?.subhead ?? blok.content.subtitle)
-      : blok.content.subtitle;
+    blok.hero && Array.isArray(blok.hero)
+      ? (blok.hero[0]?.subhead ?? blok.subtitle)
+      : blok.subtitle;
 
-  const imageAsset = blok.content.product_image;
+  const imageAsset = blok.product_image;
   const imageSrc = imageAsset?.filename
     ? (getMediaUrl(imageAsset.filename) ?? "")
     : "";
   const imageAlt = imageAsset?.alt ?? "";
 
-  const grainFilterId = `grain-watch-${String(blok.full_slug ?? blok._uid).replace(/[^a-zA-Z0-9-_]/g, "")}`;
+  const grainKey = blok.full_slug ?? blok._uid ?? blok.name ?? "watch";
+  const grainFilterId = `grain-watch-${String(grainKey).replace(/[^a-zA-Z0-9-_]/g, "")}`;
 
   const cardStyle: CSSProperties =
     theme === "light"
@@ -107,7 +115,7 @@ export function WatchItem({
   const titleOverlay =
     withTitle ? (
       <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col gap-8 p-16 text-white md:p-24">
-        <span className="cta-large font-rm-mono">{blok.content.name}</span>
+        <span className="cta-large font-rm-mono">{blok.name}</span>
         <span className="label-small font-light uppercase text-white/50">
           {subtitle}
         </span>
@@ -132,6 +140,21 @@ export function WatchItem({
       </div>
       {grainSvg}
       {titleOverlay}
+    </>
+  ) : fillImage ? (
+    <>
+      <div className="absolute inset-0 overflow-hidden">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className={cn("h-full w-full", fitClass)}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : null}
+      </div>
+      {grainSvg}
     </>
   ) : (
     <>
@@ -160,14 +183,13 @@ export function WatchItem({
 
   const shellClass = cn(
     "relative w-full overflow-hidden",
-    withTitle && "h-full min-h-0",
-    !withTitle && "flex flex-col",
+    (withTitle || fillImage) && "h-full min-h-0",
+    !withTitle && !fillImage && "flex flex-col",
     className
   );
 
-  const shellStyle: CSSProperties | undefined = withTitle
-    ? undefined
-    : cardStyle;
+  const shellStyle: CSSProperties | undefined =
+    withTitle || fillImage ? undefined : cardStyle;
 
   if (isLink) {
     return (

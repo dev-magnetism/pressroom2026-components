@@ -1,41 +1,70 @@
 import { cn } from "@/lib/cn";
 import { getMediaUrl } from "@/lib/sliderImageMedia";
-import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useMemo, useState } from "react";
 import WatchSliderBottom from "./WatchSliderBottom";
 import WatchSliderRight from "./WatchSliderRight";
-import type { WatchesSlideItem } from "./types";
+import { type WatchesSlideItem, watchesSlideItemKey } from "./types";
+import { watchSlideCrossfadeProps } from "./watchesSlideMotion";
 
 export type { WatchesSlideItem } from "./types";
 
 export type BlockWatchesSlideProps = {
   title: string;
   slides: WatchesSlideItem[];
-  /** Image de fond (URL absolue ou `/…` depuis `public`). */
+  /** Image de fond / grande image gauche unique si `heroImagePerSlide={false}` (URL absolue ou `/…`). */
   backgroundUrl?: string;
   backgroundAlt?: string;
-  /** Libellé à côté du nombre de modèles (desktop &gt; 4 slides). */
-  modelsLabel?: string;
+  /**
+   * Si `true` (défaut), la grande image gauche suit la slide (`hero_image` ou à défaut `product_image`).
+   * Si `false`, une seule image : `backgroundUrl` (inchangée au changement de slide).
+   */
+  heroImagePerSlide?: boolean;
   rtl?: boolean;
   /** Préfixe stable pour les clés React (optionnel). */
   keyPrefix?: string;
   className?: string;
 };
 
+function getSlideHeroAsset(slide: WatchesSlideItem | undefined) {
+  if (!slide) return undefined;
+  const h = slide.hero_image;
+  const p = slide.product_image;
+  if (h?.filename) return h;
+  if (p?.filename) return p;
+  return undefined;
+}
+
 export function BlockWatchesSlide({
   title,
   slides,
   backgroundUrl,
   backgroundAlt = "",
-  modelsLabel = "models",
+  heroImagePerSlide = true,
   rtl = false,
   keyPrefix = "watches-slide",
   className,
 }: BlockWatchesSlideProps) {
-  const [currentIndex, setCurrentIndex] = useState(1);
-
   const allSlides = useMemo(() => slides ?? [], [slides]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  useEffect(() => {
+    setActiveIndex(i => Math.min(i, Math.max(0, allSlides.length - 1)));
+  }, [allSlides.length]);
+
+  const activeSlide = allSlides[activeIndex];
   const bgSrc = backgroundUrl ? (getMediaUrl(backgroundUrl) ?? backgroundUrl) : "";
+
+  const perSlideAsset = heroImagePerSlide
+    ? getSlideHeroAsset(activeSlide)
+    : undefined;
+  const leftSrc = perSlideAsset?.filename
+    ? (getMediaUrl(perSlideAsset.filename) ?? perSlideAsset.filename)
+    : bgSrc;
+  const leftAlt =
+    perSlideAsset?.alt ??
+    activeSlide?.product_image?.alt ??
+    backgroundAlt;
 
   return (
     <section
@@ -65,14 +94,34 @@ export function BlockWatchesSlide({
             backgroundSize: "cover",
           }}
         />
-        {bgSrc ? (
-          <img
-            src={bgSrc}
-            alt={backgroundAlt}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-          />
+        {leftSrc ? (
+          <div className="absolute inset-0">
+            {heroImagePerSlide ? (
+              <AnimatePresence mode="sync" initial={false}>
+                <motion.img
+                  key={
+                    activeSlide
+                      ? watchesSlideItemKey(activeSlide, activeIndex)
+                      : `hero-${activeIndex}-${leftSrc}`
+                  }
+                  src={leftSrc}
+                  alt={leftAlt}
+                  className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+                  loading="lazy"
+                  decoding="async"
+                  {...watchSlideCrossfadeProps}
+                />
+              </AnimatePresence>
+            ) : (
+              <img
+                src={leftSrc}
+                alt={leftAlt}
+                className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+          </div>
         ) : null}
       </div>
       {allSlides.length > 0 ? (
@@ -82,8 +131,8 @@ export function BlockWatchesSlide({
               <WatchSliderRight
                 title={title}
                 allSlides={allSlides}
-                setCurrentIndex={setCurrentIndex}
-                modelsLabel={modelsLabel}
+                activeIndex={activeIndex}
+                onSelectSlide={setActiveIndex}
                 rtl={rtl}
               />
             ) : (
@@ -91,8 +140,9 @@ export function BlockWatchesSlide({
                 title={title}
                 keyPrefix={keyPrefix}
                 allSlides={allSlides}
-                setCurrentIndex={setCurrentIndex}
-                currentIndex={currentIndex}
+                activeIndex={activeIndex}
+                onSelectSlide={setActiveIndex}
+                interactionMode="hover"
                 rtl={rtl}
               />
             )}
@@ -103,8 +153,9 @@ export function BlockWatchesSlide({
             className="md:hidden block !relative px-20 mt-20 md:mt-64"
             theme="light"
             allSlides={allSlides}
-            setCurrentIndex={setCurrentIndex}
-            currentIndex={currentIndex}
+            activeIndex={activeIndex}
+            onSelectSlide={setActiveIndex}
+            interactionMode="click"
             rtl={rtl}
           />
         </>
