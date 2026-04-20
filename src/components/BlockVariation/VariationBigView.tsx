@@ -7,7 +7,7 @@ import { VariationButton, type VariationElement } from "./BlockVariation";
 
 type VariationBigViewProps = {
   variations: VariationElement[];
-  selectedVariation: string | null;
+  selectedVariationIndex: number;
   rtl?: boolean;
   prevLabel: string;
   nextLabel: string;
@@ -15,7 +15,7 @@ type VariationBigViewProps = {
 
 export default function VariationBigView({
   variations,
-  selectedVariation,
+  selectedVariationIndex,
   rtl = false,
   prevLabel,
   nextLabel,
@@ -30,11 +30,9 @@ export default function VariationBigView({
     if (!emblaApi) return;
     emblaApi.reInit();
     emblaApi.scrollTo(0, true);
-  }, [selectedVariation, emblaApi, variations]);
+  }, [selectedVariationIndex, emblaApi, variations]);
 
-  const currentVariation = variations.find(
-    element => element.id === selectedVariation
-  );
+  const currentVariation = variations[selectedVariationIndex] ?? variations[0];
   const galleryCount = currentVariation?.gallery?.length ?? 0;
   const hasGallery = galleryCount > 1;
   const canScroll = (currentVariation?.gallery?.length ?? 0) > 1;
@@ -60,7 +58,7 @@ export default function VariationBigView({
           <div className={cn(styles.embla_big__container, "h-[70vh]")}>
             {currentVariation?.gallery?.map((media, index) => (
               <div
-                key={`variation-big-view-${media.id ?? index}`}
+                key={`variation-big-view-${index}`}
                 className={styles.embla_big__slide}
               >
                 <div className="w-full aspect-[393/506] md:aspect-[890/689] relative h-full">

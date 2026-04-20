@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Typography } from "@/components/ui/Typography";
 import { CustomButton } from "@/components/ui/CustomButton";
 import { cn } from "@/lib/cn";
@@ -6,13 +6,11 @@ import VariationSmallView from "./VariationSmallView";
 import VariationBigView from "./VariationBigView";
 
 export type VariationAsset = {
-  id?: string;
   filename?: string;
   alt?: string;
 };
 
 export type VariationElement = {
-  id: string;
   name: string;
   subtitle?: string;
   variationName?: string;
@@ -32,7 +30,6 @@ export type BlockVariationLabels = {
 export type BlockVariationProps = {
   surtitle?: string;
   variations: VariationElement[];
-  initialVariationId?: string;
   labels?: Partial<BlockVariationLabels>;
   rtl?: boolean;
   className?: string;
@@ -73,20 +70,23 @@ export function VariationButton({
 export default function BlockVariation({
   surtitle,
   variations,
-  initialVariationId,
   labels,
   rtl = false,
   className,
 }: BlockVariationProps) {
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   const [viewType, setViewType] = useState<"big" | "small">("small");
-  const [selectedVariation, setSelectedVariation] = useState<string | null>(
-    initialVariationId ?? variations[0]?.id ?? null
-  );
+  const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
+
+  useEffect(() => {
+    setSelectedVariationIndex(index =>
+      Math.min(Math.max(index, 0), Math.max(variations.length - 1, 0))
+    );
+  }, [variations.length]);
 
   const selectedVariationElement = useMemo(
-    () => variations.find(item => item.id === selectedVariation) ?? variations[0],
-    [variations, selectedVariation]
+    () => variations[selectedVariationIndex] ?? variations[0],
+    [variations, selectedVariationIndex]
   );
   const selectedVariationLabel =
     selectedVariationElement?.variationName ??
@@ -170,8 +170,8 @@ export default function BlockVariation({
       {viewType === "small" ? (
         <VariationSmallView
           variations={variations}
-          selectedVariation={selectedVariation}
-          setSelectedVariation={setSelectedVariation}
+          selectedVariationIndex={selectedVariationIndex}
+          setSelectedVariationIndex={setSelectedVariationIndex}
           setViewType={setViewType}
           rtl={rtl}
           viewMoreLabel={mergedLabels.viewMore}
@@ -179,7 +179,7 @@ export default function BlockVariation({
       ) : (
         <VariationBigView
           variations={variations}
-          selectedVariation={selectedVariation}
+          selectedVariationIndex={selectedVariationIndex}
           rtl={rtl}
           prevLabel={mergedLabels.prev}
           nextLabel={mergedLabels.next}

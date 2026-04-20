@@ -4,7 +4,6 @@ import BlockVariation, {
 
 const VARIATIONS: VariationElement[] = [
   {
-    id: "rm-75-01-blue-sapphire",
     name: "RM 75-01 Flying Tourbillon",
     variationName: "Blue sapphire",
     subtitle: "Blue Sapphire",
@@ -20,15 +19,23 @@ const VARIATIONS: VariationElement[] = [
     },
     gallery: [
       {
-        id: "rm-75-01-blue-1",
         filename:
           "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
         alt: "RM 75-01 Blue Sapphire - view 1",
       },
+      {
+        filename:
+          "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
+        alt: "RM 75-01 Blue Sapphire - view 2",
+      },
+      {
+        filename:
+          "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
+        alt: "RM 75-01 Blue Sapphire - view 3",
+      },
     ],
   },
   {
-    id: "rm-75-01-clear-sapphire",
     name: "RM 75-01 Flying Tourbillon",
     variationName: "Clear sapphire",
     subtitle: "Clear Sapphire",
@@ -44,15 +51,23 @@ const VARIATIONS: VariationElement[] = [
     },
     gallery: [
       {
-        id: "rm-75-01-clear-1",
         filename:
           "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
         alt: "RM 75-01 Clear Sapphire - view 1",
       },
+      {
+        filename:
+          "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
+        alt: "RM 75-01 Clear Sapphire - view 2",
+      },
+      {
+        filename:
+          "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
+        alt: "RM 75-01 Clear Sapphire - view 3",
+      },
     ],
   },
   {
-    id: "rm-75-01-lilac-sapphire",
     name: "RM 75-01 Flying Tourbillon",
     variationName: "Lilac sapphire",
     subtitle: "Lilac Sapphire",
@@ -68,10 +83,19 @@ const VARIATIONS: VariationElement[] = [
     },
     gallery: [
       {
-        id: "rm-75-01-lilac-1",
         filename:
           "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
         alt: "RM 75-01 Lilac Sapphire - view 1",
+      },
+      {
+        filename:
+          "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
+        alt: "RM 75-01 Lilac Sapphire - view 2",
+      },
+      {
+        filename:
+          "https://develop--richard-mille-2025.netlify.app/_next/image?url=https%3A%2F%2Fstaging-media.richardmille.com%2Ff%2F337605%2F3000x2322%2Ffd95b9d123%2Frm_75-01_blue_sapphire_6h.png&w=3840&q=75",
+        alt: "RM 75-01 Lilac Sapphire - view 3",
       },
     ],
   },

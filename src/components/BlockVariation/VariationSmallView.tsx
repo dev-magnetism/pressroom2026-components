@@ -10,8 +10,8 @@ import type { VariationElement } from "./BlockVariation";
 
 type VariationSmallViewProps = {
   variations: VariationElement[];
-  selectedVariation: string | null;
-  setSelectedVariation: (variationId: string) => void;
+  selectedVariationIndex: number;
+  setSelectedVariationIndex: (index: number) => void;
   setViewType: (type: "big" | "small") => void;
   rtl?: boolean;
   viewMoreLabel: string;
@@ -19,8 +19,8 @@ type VariationSmallViewProps = {
 
 export default function VariationSmallView({
   variations,
-  selectedVariation,
-  setSelectedVariation,
+  selectedVariationIndex,
+  setSelectedVariationIndex,
   setViewType,
   rtl = false,
   viewMoreLabel,
@@ -43,13 +43,13 @@ export default function VariationSmallView({
     };
   }, [emblaApi]);
 
-  const animateImageTransition = (newVariationId: string) => {
+  const animateImageTransition = (newVariationIndex: number) => {
     if (!mainImageRef.current) return;
     const currentImageWrapper = mainImageRef.current.querySelector(
-      `[data-variation-id="${selectedVariation}"]`
+      `[data-variation-index="${selectedVariationIndex}"]`
     ) as HTMLElement | null;
     const newImageWrapper = mainImageRef.current.querySelector(
-      `[data-variation-id="${newVariationId}"]`
+      `[data-variation-index="${newVariationIndex}"]`
     ) as HTMLElement | null;
 
     if (!currentImageWrapper || !newImageWrapper) return;
@@ -78,13 +78,14 @@ export default function VariationSmallView({
   ) => {
     event.preventDefault();
     event.stopPropagation();
-    const id = event.currentTarget.dataset.id;
-    if (id && id !== selectedVariation) {
-      setSelectedVariation(id);
-      animateImageTransition(id);
+    const index = Number(event.currentTarget.dataset.index);
+    if (!Number.isInteger(index)) return;
+    if (index !== selectedVariationIndex) {
+      setSelectedVariationIndex(index);
+      animateImageTransition(index);
     }
-    if (emblaApi && id) {
-      emblaApi.scrollTo(variations.findIndex(item => item.id === id));
+    if (emblaApi) {
+      emblaApi.scrollTo(index);
     }
   };
 
@@ -94,19 +95,19 @@ export default function VariationSmallView({
         <div className={cn(styles.embla, "relative z-2 md:pl-32 pl-0")}>
           <div className="embla__viewport overflow-hidden" ref={emblaRef}>
             <div className={styles.embla__container}>
-              {variations.map(item => (
+              {variations.map((item, index) => (
                 <div
                   className={cn(
                     styles.thumbnail__slide,
                     "relative overflow-hidden p-5 border group md:w-160 lg:w-[170px] transition-all duration-300",
-                    selectedVariation === item.id
+                    selectedVariationIndex === index
                       ? "border-primary-black"
                       : "border-transparent hover:border-primary-black/20"
                   )}
-                  key={item.id}
+                  key={`variation-thumb-${index}`}
                 >
                   <button
-                    data-id={item.id}
+                    data-index={index}
                     onClick={handleChangeSelectedVariation}
                     className="flex flex-col text-left align-top w-full cursor-pointer aspect-[150/115] md:aspect-[150/120] relative bg-white text-primary-black transition-all duration-300"
                   >
@@ -143,13 +144,13 @@ export default function VariationSmallView({
           className="pointer-events-none mt-16 md:mt-0 w-full h-[50vh] md:h-[70vh] relative md:absolute left-0 bottom-0 z-1"
           ref={mainImageRef}
         >
-          {variations.map(element => (
+          {variations.map((element, index) => (
             <div
-              key={element.id}
-              data-variation-id={element.id}
+              key={`variation-main-${index}`}
+              data-variation-index={index}
               className={cn(
                 "absolute inset-0",
-                selectedVariation === element.id
+                selectedVariationIndex === index
                   ? "opacity-100"
                   : "opacity-0 pointer-events-none"
               )}
@@ -168,7 +169,7 @@ export default function VariationSmallView({
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={`button-mobile-${selectedVariation}`}
+          key={`button-mobile-${selectedVariationIndex}`}
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
