@@ -13,6 +13,9 @@ export type TitleTextProps = {
   backgroundColor?: string;
   /** Couleur du texte (titre, sous-titre, corps). Défaut : `primary-black`. */
   textColor?: string;
+  /** Image sous le texte : `px-20` sur mobile (comme le texte) ; à partir de `md`, 40px de marge latérale ; ratio 1360/545 sur `md+`. */
+  bottomImageUrl?: string;
+  bottomImageAlt?: string;
   className?: string;
 };
 
@@ -22,6 +25,8 @@ export function TitleText({
   text,
   backgroundColor,
   textColor,
+  bottomImageUrl,
+  bottomImageAlt = "",
   className,
 }: TitleTextProps) {
   const paragraphs = text
@@ -38,6 +43,7 @@ export function TitleText({
   const titleTrim = title?.trim();
   const subtitleTrim = subtitle?.trim();
   const hasHead = Boolean(titleTrim || subtitleTrim);
+  const bottomImageTrim = bottomImageUrl?.trim();
 
   return (
     <section
@@ -108,6 +114,18 @@ export function TitleText({
           </div>
         )}
       </div>
+      {bottomImageTrim ? (
+        <div className="mt-[56px] w-full px-20 md:px-[40px]">
+          <div className="w-full overflow-hidden md:aspect-[1360/545]">
+            <img
+              src={bottomImageTrim}
+              alt={bottomImageAlt}
+              className="h-auto w-full md:h-full md:object-cover"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
