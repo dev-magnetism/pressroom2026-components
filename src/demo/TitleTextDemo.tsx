@@ -18,6 +18,13 @@ export function TitleTextDemo() {
         bottomImageUrl={BOTTOM_IMG}
         bottomImageAlt="Détail du mouvement RM 41-01"
       />
+
+      <TitleText
+        layout="vertical"
+        title="RM 41-01"
+        subtitle="AUTOMATIC WINDING"
+        text={BODY}
+      />
     </div>
   );
 }

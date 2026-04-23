@@ -20,6 +20,11 @@
   gap: 16px;
 }
 
+.headVertical {
+  align-items: center;
+  text-align: center;
+}
+
 .title {
   margin: 0;
   padding: 0;
