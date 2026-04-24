@@ -8,6 +8,7 @@ import { BlockSliderImageDemo } from "@/demo/BlockSliderImageDemo";
 import { BlockVideoDemo } from "@/demo/BlockVideoDemo";
 import { BlockWatchesSlideDemo } from "@/demo/BlockWatchesSlideDemo";
 import { BlockCharacteristicDemo } from "@/demo/BlockCharacteristicDemo";
+import { BlockEditoDemo } from "@/demo/BlockEditoDemo";
 import { BlockVariationDemo } from "@/demo/BlockVariationDemo";
 import { DiaporamaDemo } from "@/demo/DiaporamaDemo";
 import { KeyFiguresDemo } from "@/demo/KeyFiguresDemo";
@@ -33,6 +34,7 @@ export default function App() {
       <BlockQuoteDemo />
       <BlockBlocDemo />
       <BlockTextImageDemo />
+      <BlockEditoDemo />
       <TitleTextDemo />
       <BlockSliderImageDemo />
       <BlockVariationDemo />

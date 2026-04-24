@@ -252,6 +252,50 @@
       font-size: 72px;
     }
   }
+
+  /* Block édito (aligné sur richardmille / Storyblok block_edito) */
+  .headline-large-medium {
+    @apply leading-none font-light;
+    font-size: max(4rem, 40px);
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 1024px) {
+    .headline-large-medium {
+      font-size: max(7.2rem, 70px);
+    }
+  }
+  @media (min-width: 1440px) {
+    .headline-large-medium {
+      font-size: 72px;
+    }
+  }
+
+  .title-xlarge-medium {
+    @apply leading-[100%] font-light;
+    font-size: max(4rem, 40px);
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 1024px) {
+    .title-xlarge-medium {
+      font-size: max(6.4rem, 64px);
+    }
+  }
+  @media (min-width: 1440px) {
+    .title-xlarge-medium {
+      font-size: 64px;
+    }
+  }
+
+  .headline-word-break {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 0.9;
+  }
+
+  .grid-container {
+    @apply grid px-20 md:px-32 grid-cols-6 md:grid-cols-12 gap-16 md:gap-20 gap-y-0;
+  }
 }
 
 html.js .anim-invisible {
