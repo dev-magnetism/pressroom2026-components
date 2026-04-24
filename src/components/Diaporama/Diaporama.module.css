@@ -21,9 +21,10 @@
   align-items: center;
   gap: 48px;
   position: absolute;
-  top: 22px;
+  bottom: 22px;
   left: 0;
   right: 0;
+  top: auto;
   z-index: 10;
   width: 100%;
   padding: 0 22px;
@@ -120,11 +121,12 @@
   transform: translate3d(0, 0, 0);
 }
 
-/* Légende slide : 16px fixes entre titre et sous-titre (flex gap, hors Tailwind). */
+/* Légende slide : 16px fixes entre titre et sous-titre (flex gap, hors Tailwind).
+   Offset vertical au-dessus de la pagination (bottom ~22px + rangée progress + flèches). */
 .caption {
   position: absolute;
-  z-index: 5;
-  bottom: 2.4rem;
+  z-index: 20;
+  bottom: calc(2.4rem + 56px);
   left: 2.4rem;
   max-width: min(calc(100% - 4.8rem), 42rem);
   pointer-events: none;
