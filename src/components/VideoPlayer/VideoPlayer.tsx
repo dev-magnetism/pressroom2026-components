@@ -646,7 +646,7 @@ export function VideoPlayer({
         <div
           className={cn(
             "video-player--timeline flex gap-8 absolute left-12 md:left-0 md:pl-24 items-center top-1/2 -translate-y-1/2 z-[4] h-full cursor-pointer transition-opacity duration-600",
-            hideElements && "opacity-0"
+            hideElements && "opacity-[0]"
           )}
           onMouseEnter={() => setIsTimelineHovered(true)}
           onMouseLeave={() => {
@@ -660,7 +660,7 @@ export function VideoPlayer({
                 "block md:hidden transition-opacity duration-200",
                 !isMobile &&
                   (isTimelineHovered || showPlayButton === false) &&
-                  "opacity-0"
+                  "opacity-[0]"
               )}
             >
               {isPlaying ? <PauseGlyph /> : <PlayGlyph />}
@@ -738,14 +738,14 @@ export function VideoPlayer({
           className={cn(
             "absolute w-full h-full top-0 left-0 pointer-events-none z-[12] transition-opacity duration-600",
             (hideElements || hideControlsOnHover) &&
-              "opacity-0 pointer-events-none"
+              "opacity-[0] pointer-events-none"
           )}
         >
           <div
             ref={playPauseButtonRef}
             className={cn(
-              "w-fit hidden md:flex h-fit opacity-0 absolute left-0 top-0 pointer-events-none flex-col items-center justify-center transition-opacity duration-300",
-              isTimelineHovered && "opacity-0"
+              "w-fit hidden md:flex h-fit opacity-[0] absolute left-0 top-0 pointer-events-none flex-col items-center justify-center transition-opacity duration-300",
+              isTimelineHovered && "opacity-[0]"
             )}
           >
             {isPlaying ? (
