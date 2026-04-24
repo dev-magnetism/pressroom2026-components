@@ -85,7 +85,13 @@ export function TitleText({
                   </p>
                 ) : null}
                 {titleTrim ? (
-                  <h2 className={styles.title} style={headingStyle}>
+                  <h2
+                    className={cn(
+                      "title-xlarge-medium headline-word-break uppercase",
+                      styles.title
+                    )}
+                    style={headingStyle}
+                  >
                     {renderTextWithLineBreaks(titleTrim)}
                   </h2>
                 ) : null}
@@ -102,10 +108,16 @@ export function TitleText({
           </div>
         ) : hasHead ? (
           <div className="grid grid-cols-12">
-            <div className="col-span-12 mb-40 md:mb-0 md:col-span-6 md:pr-[32px] md:flex md:items-start md:justify-center">
+            <div className="col-span-12 mb-40 min-w-0 md:mb-0 md:col-span-6 md:pr-[32px] md:flex md:items-start md:justify-center">
               <div className={cn(styles.head, "px-0 md:px-[116px] md:mx-auto")}>
                 {titleTrim ? (
-                  <h2 className={styles.title} style={headingStyle}>
+                  <h2
+                    className={cn(
+                      "title-xlarge-medium headline-word-break uppercase",
+                      styles.title
+                    )}
+                    style={headingStyle}
+                  >
                     {renderTextWithLineBreaks(titleTrim)}
                   </h2>
                 ) : null}
@@ -116,7 +128,7 @@ export function TitleText({
                 ) : null}
               </div>
             </div>
-            <div className="col-span-12 md:col-span-6 md:pl-[32px]">
+            <div className="col-span-12 min-w-0 md:col-span-6 md:pl-[32px]">
               <div
                 className={cn(
                   "body-medium-edito lg:w-5/6 opacity-80",

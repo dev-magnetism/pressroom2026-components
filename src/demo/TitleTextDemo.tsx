@@ -21,7 +21,7 @@ export function TitleTextDemo() {
 
       <TitleText
         layout="vertical"
-        title="RM 41-01"
+        title="An exceptional caliber"
         subtitle="AUTOMATIC WINDING"
         text={BODY}
       />
