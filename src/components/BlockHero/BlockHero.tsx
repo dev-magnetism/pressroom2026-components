@@ -278,7 +278,7 @@ export const BlockHero: React.FC<BlockHeroProps> = props => {
     <section
       className={cn(
         styles.container,
-        "min-h-screen-stable md:min-h-[101vh] bg-white flex"
+        "min-h-[90vh] md:min-h-[101vh] bg-white flex"
       )}
     >
       <div
