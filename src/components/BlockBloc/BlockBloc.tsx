@@ -2,6 +2,7 @@ import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import { Typography } from "@/components/ui/Typography";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export type BlockBlocProps = {
@@ -89,7 +90,7 @@ export function BlockBloc({
               className="!text-[48px] uppercase text-center font-light text-primary-black mx-auto"
               as="h2"
             >
-              {title}
+              {renderTextWithLineBreaks(title)}
             </Typography>
           ) : null}
           {subtitle?.trim() ? (
@@ -99,7 +100,7 @@ export function BlockBloc({
                 title?.trim() && "mt-[20px]"
               )}
             >
-              {subtitle}
+              {renderTextWithLineBreaks(subtitle)}
             </span>
           ) : null}
         </div>
@@ -148,7 +149,7 @@ export function BlockBloc({
                     className="opacity-80"
                     weight="regular"
                   >
-                    {textLeft}
+                    {renderTextWithLineBreaks(textLeft ?? "")}
                   </Typography>
                 ) : null}
                 {hasTextRight ? (
@@ -159,7 +160,7 @@ export function BlockBloc({
                     className="opacity-80"
                     weight="regular"
                   >
-                    {textRight}
+                    {renderTextWithLineBreaks(textRight ?? "")}
                   </Typography>
                 ) : null}
               </div>
@@ -174,7 +175,7 @@ export function BlockBloc({
                       className="opacity-80"
                       weight="regular"
                     >
-                      {textLeft}
+                      {renderTextWithLineBreaks(textLeft ?? "")}
                     </Typography>
                   </div>
                 ) : null}
@@ -187,7 +188,7 @@ export function BlockBloc({
                       className="opacity-80"
                       weight="regular"
                     >
-                      {textRight}
+                      {renderTextWithLineBreaks(textRight ?? "")}
                     </Typography>
                   </div>
                 ) : null}

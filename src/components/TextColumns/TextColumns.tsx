@@ -2,6 +2,7 @@ import { Typography } from "@/components/ui/Typography";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useMax768 } from "@/hooks/useMax768";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import {
@@ -178,7 +179,7 @@ export function TextColumns({
             weight="light"
             className={cn("font-rm-mono uppercase", styles.headerEyebrow)}
           >
-            {subtitleTrim}
+            {renderTextWithLineBreaks(subtitleTrim)}
           </Typography>
         ) : null}
         {title?.trim() ? (
@@ -186,7 +187,7 @@ export function TextColumns({
             variant="title-large-medium"
             className={cn("uppercase", styles.headerTitle)}
           >
-            {title.trim()}
+            {renderTextWithLineBreaks(title.trim())}
           </Typography>
         ) : null}
       </div>

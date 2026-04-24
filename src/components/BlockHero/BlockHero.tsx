@@ -3,6 +3,7 @@ import { Typography } from "@/components/ui/Typography";
 import { HeroMaskedBlock } from "./HeroMaskedBlock";
 import { CustomButton } from "@/components/ui/CustomButton";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import React, { useCallback, useEffect, useMemo, useRef, memo } from "react";
@@ -119,7 +120,7 @@ const BlockHeroContent = memo<ContentProps>(
               className="text-center"
               as="p"
             >
-              {selected.title}
+              {renderTextWithLineBreaks(selected.title)}
             </Typography>
           </HeroMaskedBlock>
 
@@ -129,7 +130,7 @@ const BlockHeroContent = memo<ContentProps>(
               color="white"
               textTransform="uppercase"
             >
-              {selected.subhead}
+              {renderTextWithLineBreaks(selected.subhead)}
             </Typography>
           </HeroMaskedBlock>
 

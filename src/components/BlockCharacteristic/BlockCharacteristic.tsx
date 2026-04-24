@@ -1,5 +1,6 @@
 import { Typography } from "@/components/ui/Typography";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { useEffect, useMemo, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -90,7 +91,7 @@ export const BlockCharacteristic: React.FC<BlockCharacteristicProps> = ({
               textTransform="uppercase"
               as="h2"
             >
-              {title}
+              {renderTextWithLineBreaks(title)}
             </Typography>
           </div>
         </div>

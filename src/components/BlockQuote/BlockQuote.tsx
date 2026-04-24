@@ -1,6 +1,7 @@
 import { Typography } from "@/components/ui/Typography";
 import { CustomButton } from "@/components/ui/CustomButton";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -127,7 +128,7 @@ export function BlockQuote({
               style={quoteColor ? { color: quoteColor } : undefined}
               as="p"
             >
-              {quote}
+              {renderTextWithLineBreaks(quote)}
             </Typography>
           </div>
 
@@ -142,7 +143,7 @@ export function BlockQuote({
                     styles.signature
                   )}
                 >
-                  {signature}
+                  {renderTextWithLineBreaks(signature)}
                 </CustomButton>
               ) : null}
               {signatureSubtitle ? (
@@ -153,7 +154,7 @@ export function BlockQuote({
                     styles.signature
                   )}
                 >
-                  {signatureSubtitle}
+                  {renderTextWithLineBreaks(signatureSubtitle)}
                 </p>
               ) : null}
             </div>

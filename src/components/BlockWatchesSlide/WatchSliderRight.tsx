@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo } from "react";
@@ -63,7 +64,7 @@ export function WatchSliderRight({
       <div className="w-full h-full relative p-32 flex flex-col justify-center items-center">
         <div className="absolute top-32 left-32 w-1/2">
           <h2 className="headline-medium uppercase font-light text-primary-black">
-            {title}
+            {renderTextWithLineBreaks(title)}
           </h2>
         </div>
         <div className="absolute bottom-32 left-32 max-w-[min(40rem,94%)] pr-16">
@@ -78,7 +79,9 @@ export function WatchSliderRight({
                   )}
                   {...watchSlideCrossfadeProps}
                 >
-                  {slideLegend || "\u00A0"}
+                  {slideLegend
+                    ? renderTextWithLineBreaks(slideLegend)
+                    : "\u00A0"}
                 </motion.p>
               ) : null}
             </AnimatePresence>

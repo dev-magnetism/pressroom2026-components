@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { getMediaUrl } from "@/lib/sliderImageMedia";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
@@ -81,7 +82,9 @@ export function BlockWatchesSlide({
         }}
       />
       <div className="md:hidden block absolute top-32 left-16 z-10 max-w-xl">
-        <h2 className="headline-medium uppercase font-light text-white">{title}</h2>
+        <h2 className="headline-medium uppercase font-light text-white">
+          {renderTextWithLineBreaks(title)}
+        </h2>
       </div>
       <div className="relative md:absolute inset-0 w-full aspect-[393/460] md:aspect-auto md:h-full md:max-h-none">
         <div

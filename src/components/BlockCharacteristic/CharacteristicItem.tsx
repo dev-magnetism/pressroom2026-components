@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import styles from "./BlockCharacteristic.module.css";
 
 export type CharacteristicItemData = {
@@ -28,7 +29,7 @@ const CharacteristicItem: React.FC<CharacteristicItemProps> = ({
     >
       <div className="w-full">
         <span className="label-large font-bold uppercase inline-block mb-16">
-          {item.title}
+          {renderTextWithLineBreaks(item.title)}
         </span>
       </div>
 
@@ -41,7 +42,9 @@ const CharacteristicItem: React.FC<CharacteristicItemProps> = ({
         >
           <ul>
             {item.contentItems.map((contentItem, index) => (
-              <li key={`${item.title}-${index}`}>{contentItem}</li>
+              <li key={`${item.title}-${index}`}>
+                {renderTextWithLineBreaks(contentItem)}
+              </li>
             ))}
           </ul>
         </div>
@@ -60,7 +63,7 @@ const CharacteristicItem: React.FC<CharacteristicItemProps> = ({
             styles.richText
           )}
         >
-          {item.description}
+          {renderTextWithLineBreaks(item.description)}
         </p>
       ) : null}
     </div>

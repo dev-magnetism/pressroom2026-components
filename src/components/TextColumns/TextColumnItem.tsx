@@ -1,11 +1,12 @@
 import { Typography } from "@/components/ui/Typography";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import styles from "./TextColumns.module.css";
 
 export type TextColumnItemData = {
   id?: string;
   title?: string;
-  /** Texte brut ; paragraphes séparés par une ligne vide. */
+  /** Texte brut ; les sauts de ligne (`\n`) sont rendus en `<br />`. */
   description?: string;
   /** HTML optionnel (contenu CMS de confiance). */
   descriptionHtml?: string;
@@ -28,7 +29,7 @@ export function TextColumnItem({ item, className }: TextColumnItemProps) {
           variant="title-xsmall"
           className={styles.cardTitle}
         >
-          {item.title.trim()}
+          {renderTextWithLineBreaks(item.title.trim())}
         </Typography>
       ) : null}
       {html ? (
@@ -46,11 +47,7 @@ export function TextColumnItem({ item, className }: TextColumnItemProps) {
             styles.cardBody
           )}
         >
-          {plain.split(/\n\n+/).map((block, i) => (
-            <p key={i} className="m-0">
-              {block}
-            </p>
-          ))}
+          {renderTextWithLineBreaks(plain)}
         </div>
       ) : null}
     </div>

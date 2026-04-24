@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect } from "react";
@@ -117,7 +118,7 @@ export function WatchSliderBottom({
               theme === "light" ? "text-primary-black/60" : "text-white/50"
             )}
           >
-            {title}
+            {renderTextWithLineBreaks(title)}
           </span>
           <div className="grid h-[6.4rem] overflow-hidden">
             <AnimatePresence mode="sync" initial={false}>
@@ -133,7 +134,9 @@ export function WatchSliderBottom({
                   )}
                   {...watchSlideCrossfadeProps}
                 >
-                  {legendPrimary || "\u00A0"}
+                  {legendPrimary
+                    ? renderTextWithLineBreaks(legendPrimary)
+                    : "\u00A0"}
                 </motion.p>
               ) : null}
             </AnimatePresence>
@@ -157,7 +160,9 @@ export function WatchSliderBottom({
                     )}
                     {...watchSlideCrossfadeProps}
                   >
-                    {legendPrimary || "\u00A0"}
+                    {legendPrimary
+                      ? renderTextWithLineBreaks(legendPrimary)
+                      : "\u00A0"}
                   </motion.p>
                 ) : null}
               </AnimatePresence>

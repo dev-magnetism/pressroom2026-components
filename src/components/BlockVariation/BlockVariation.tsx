@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Typography } from "@/components/ui/Typography";
 import { CustomButton } from "@/components/ui/CustomButton";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import VariationSmallView from "./VariationSmallView";
 import VariationBigView from "./VariationBigView";
 
@@ -111,7 +112,7 @@ export default function BlockVariation({
               color="primary-black"
               as="h2"
             >
-              {surtitle}
+              {renderTextWithLineBreaks(surtitle)}
             </Typography>
           ) : null}
 
@@ -123,7 +124,9 @@ export default function BlockVariation({
               selectedVariationLabel ? "mb-0" : "mb-4"
             )}
           >
-            {selectedVariationElement?.name}
+            {selectedVariationElement?.name
+              ? renderTextWithLineBreaks(selectedVariationElement.name)
+              : null}
           </Typography>
 
           {selectedVariationLabel ? (
@@ -132,7 +135,7 @@ export default function BlockVariation({
               color="primary-black"
               className="uppercase text-center mb-5 -mt-8"
             >
-              {selectedVariationLabel}
+              {renderTextWithLineBreaks(selectedVariationLabel)}
             </Typography>
           ) : null}
 

@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import styles from "./KeyFigures.module.css";
 
 export type KeyFigureItem = {
@@ -92,13 +93,19 @@ export function KeyFigures({
         {slice.map((item, index) => (
           <article key={`${item.figure}-${index}`} className={styles.item}>
             {item.subtitle?.trim() ? (
-              <p className={styles.subtitle}>{item.subtitle.trim()}</p>
+              <p className={styles.subtitle}>
+                {renderTextWithLineBreaks(item.subtitle.trim())}
+              </p>
             ) : null}
             {item.figure?.trim() ? (
-              <p className={styles.figure}>{item.figure.trim()}</p>
+              <p className={styles.figure}>
+                {renderTextWithLineBreaks(item.figure.trim())}
+              </p>
             ) : null}
             {item.description?.trim() ? (
-              <p className={styles.description}>{item.description.trim()}</p>
+              <p className={styles.description}>
+                {renderTextWithLineBreaks(item.description.trim())}
+              </p>
             ) : null}
           </article>
         ))}

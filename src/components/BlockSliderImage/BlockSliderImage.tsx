@@ -1,5 +1,6 @@
 import { Typography } from "@/components/ui/Typography";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import {
   extractImageDimensions,
   getFocalePercentages,
@@ -104,7 +105,7 @@ const SliderContent = memo(
               key={`slide-v2-subtitle-${contentId}`}
               className="subtitle label-large uppercase block"
             >
-              {subtitle}
+              {renderTextWithLineBreaks(subtitle)}
             </span>
           ) : null}
           <Typography
@@ -114,7 +115,7 @@ const SliderContent = memo(
             textTransform="uppercase"
             className="title"
           >
-            {title}
+            {renderTextWithLineBreaks(title)}
           </Typography>
         </div>
         <div className="col-span-12 md:col-span-6 2xl:col-span-4">
@@ -190,7 +191,7 @@ function SlideMedia({
             captionColor === "black" ? "text-black" : "text-white"
           )}
         >
-          {caption}
+          {renderTextWithLineBreaks(caption.trim())}
         </span>
       ) : null}
     </div>

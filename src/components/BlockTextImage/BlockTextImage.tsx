@@ -1,5 +1,6 @@
 import { Typography } from "@/components/ui/Typography";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import styles from "./BlockTextImage.module.css";
 
 export type BlockTextImageLayout = "top" | "center" | "bottom";
@@ -12,7 +13,7 @@ export type BlockTextImageProps = {
   /** `true` : image à gauche, texte à droite. `false` : texte à gauche, image à droite (comme Storyblok `image_left`). */
   imageLeft: boolean;
   title?: string;
-  /** Texte principal (plusieurs paragraphes séparés par des sauts de ligne possibles). */
+  /** Texte principal ; les sauts de ligne (`\n`) sont rendus en `<br />`. */
   description: string;
   bigImageUrl: string;
   bigImageAlt?: string;
@@ -43,11 +44,7 @@ export function BlockTextImage({
     ? { style: { color: textColor } as const }
     : { color: "primary-black" as const };
 
-  const paragraphs = description
-    .trim()
-    .split(/\n+/)
-    .map(p => p.trim())
-    .filter(Boolean);
+  const descriptionTrim = description.trim();
 
   return (
     <section
@@ -98,7 +95,7 @@ export function BlockTextImage({
               textTransform="uppercase"
               as="h2"
             >
-              {title}
+              {renderTextWithLineBreaks(title.trim())}
             </Typography>
           ) : (
             <span />
@@ -120,9 +117,7 @@ export function BlockTextImage({
               {...bodyTypographyProps}
               weight="regular"
             >
-              {paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
+              {renderTextWithLineBreaks(descriptionTrim)}
             </Typography>
           </div>
         </div>

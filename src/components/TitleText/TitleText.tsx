@@ -1,5 +1,6 @@
 import { Typography } from "@/components/ui/Typography";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import styles from "./TitleText.module.css";
 
 export type TitleTextLayout = "horizontal" | "vertical";
@@ -9,7 +10,7 @@ export type TitleTextProps = {
   title?: string;
   /** Sous-titre : sous le titre en `horizontal`, au-dessus du titre en `vertical` (24px, gap 16px avec le titre). */
   subtitle?: string;
-  /** Colonne droite — paragraphes séparés par des sauts de ligne (comme `BlockTextImage` `description`). */
+  /** Colonne droite ; les sauts de ligne (`\n`) sont rendus en `<br />` (comme `BlockTextImage` `description`). */
   text: string;
   /** Fond de la section (couleur CSS). Défaut : blanc. */
   backgroundColor?: string;
@@ -37,11 +38,7 @@ export function TitleText({
   layout = "horizontal",
   className,
 }: TitleTextProps) {
-  const paragraphs = text
-    .trim()
-    .split(/\n+/)
-    .map(p => p.trim())
-    .filter(Boolean);
+  const textTrim = text.trim();
 
   const bodyTypographyProps = textColor
     ? { style: { color: textColor } as const }
@@ -61,9 +58,7 @@ export function TitleText({
       {...bodyTypographyProps}
       weight="regular"
     >
-      {paragraphs.map((p, i) => (
-        <p key={i}>{p}</p>
-      ))}
+      {renderTextWithLineBreaks(textTrim)}
     </Typography>
   );
 
@@ -86,12 +81,12 @@ export function TitleText({
               <div className={cn(styles.head, styles.headVertical, "w-full")}>
                 {subtitleTrim ? (
                   <p className={styles.subtitle} style={headingStyle}>
-                    {subtitleTrim}
+                    {renderTextWithLineBreaks(subtitleTrim)}
                   </p>
                 ) : null}
                 {titleTrim ? (
                   <h2 className={styles.title} style={headingStyle}>
-                    {titleTrim}
+                    {renderTextWithLineBreaks(titleTrim)}
                   </h2>
                 ) : null}
               </div>
@@ -111,12 +106,12 @@ export function TitleText({
               <div className={cn(styles.head, "px-0 md:px-[116px] md:mx-auto")}>
                 {titleTrim ? (
                   <h2 className={styles.title} style={headingStyle}>
-                    {titleTrim}
+                    {renderTextWithLineBreaks(titleTrim)}
                   </h2>
                 ) : null}
                 {subtitleTrim ? (
                   <p className={styles.subtitle} style={headingStyle}>
-                    {subtitleTrim}
+                    {renderTextWithLineBreaks(subtitleTrim)}
                   </p>
                 ) : null}
               </div>

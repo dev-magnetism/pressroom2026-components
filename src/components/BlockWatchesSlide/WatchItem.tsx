@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { getLinkUrl } from "@/lib/links";
 import { getMediaUrl } from "@/lib/sliderImageMedia";
 import type { WatchesSlideItem } from "./types";
@@ -115,9 +116,11 @@ export function WatchItem({
   const titleOverlay =
     withTitle ? (
       <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col gap-8 p-16 text-white md:p-24">
-        <span className="cta-large font-rm-mono">{blok.name}</span>
+        <span className="cta-large font-rm-mono">
+          {blok.name ? renderTextWithLineBreaks(blok.name) : null}
+        </span>
         <span className="label-small font-light uppercase text-white/50">
-          {subtitle}
+          {subtitle ? renderTextWithLineBreaks(subtitle) : null}
         </span>
       </div>
     ) : null;

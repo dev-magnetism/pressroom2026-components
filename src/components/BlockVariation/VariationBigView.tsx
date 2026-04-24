@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { getMediaUrl } from "@/lib/sliderImageMedia";
 import styles from "./BlockVariation.module.css";
 import { VariationButton, type VariationElement } from "./BlockVariation";
@@ -108,7 +109,7 @@ export default function VariationBigView({
             fill="black"
           />
         </svg>
-        <span>{prevLabel}</span>
+        <span>{renderTextWithLineBreaks(prevLabel)}</span>
       </VariationButton>
 
       <VariationButton
@@ -119,7 +120,7 @@ export default function VariationBigView({
         onClick={scrollNext}
         disabled={!canScroll}
       >
-        <span>{nextLabel}</span>
+        <span>{renderTextWithLineBreaks(nextLabel)}</span>
         <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
           <path
             d="M5.49131 4.44L0.295312 4.44L0.295312 3.588L5.47931 3.588L3.82331 1.992L3.34331 1.512L3.94331 0.924L7.01531 4.02L3.94331 7.116L3.34331 6.528L3.82331 6.048L5.49131 4.44Z"

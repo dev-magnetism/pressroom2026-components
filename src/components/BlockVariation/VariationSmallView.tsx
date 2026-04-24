@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { gsap } from "gsap";
 import { CustomButton } from "@/components/ui/CustomButton";
 import { cn } from "@/lib/cn";
+import { renderTextWithLineBreaks } from "@/lib/textLineBreaks";
 import { getMediaUrl } from "@/lib/sliderImageMedia";
 import styles from "./BlockVariation.module.css";
 import type { VariationElement } from "./BlockVariation";
@@ -113,9 +114,13 @@ export default function VariationSmallView({
                   >
                     <div className="p-6">
                       <p className="text-11 opacity-50 font-mono block variation-name uppercase">
-                        {item.name}
+                        {renderTextWithLineBreaks(item.name)}
                       </p>
-                      <p className="variation-subtitle">{item.subtitle}</p>
+                      <p className="variation-subtitle">
+                        {item.subtitle
+                          ? renderTextWithLineBreaks(item.subtitle)
+                          : null}
+                      </p>
                     </div>
                     <div className="relative flex-1 h-[70%] w-full overflow-hidden">
                       <img
