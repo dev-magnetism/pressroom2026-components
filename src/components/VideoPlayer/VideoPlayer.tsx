@@ -708,8 +708,9 @@ export function VideoPlayer({
           type="button"
           className={cn(
             "video-player--audio pointer-events-auto absolute h-full top-1/2 -translate-y-1/2 p-24 pr-12 cursor-pointer right-0 z-[20] transition-opacity duration-600 w-[70px]",
-            hideElements && "opacity-0 pointer-events-none"
+            hideElements && "pointer-events-none"
           )}
+          style={{ opacity: hideElements ? 0 : 1 }}
           aria-label={labels.toggleAudio}
           onClick={e => {
             e.stopPropagation();
