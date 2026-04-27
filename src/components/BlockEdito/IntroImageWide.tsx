@@ -11,10 +11,22 @@ export function IntroImageWide({
   content,
   imageUrl,
   imageAlt = "",
+  textColor,
 }: Pick<
   BlockEditoProps,
-  "imagePosition" | "title" | "subtitle" | "content" | "imageUrl" | "imageAlt"
+  | "imagePosition"
+  | "title"
+  | "subtitle"
+  | "content"
+  | "imageUrl"
+  | "imageAlt"
+  | "textColor"
 >) {
+  const headingStyle = textColor ? ({ color: textColor } as const) : undefined;
+  const bodyTypographyProps = textColor
+    ? ({ style: { color: textColor } } as const)
+    : ({ color: "primary-black" } as const);
+
   return (
     <div
       className={cn(
@@ -39,13 +51,15 @@ export function IntroImageWide({
             duration={0.6}
             from={{ y: 24, opacity: 0 }}
             className={cn(
-              "headline-large-medium uppercase text-primary-black w-full pb-2 break-words",
+              "headline-large-medium uppercase w-full pb-2 break-words",
+              !textColor && "text-primary-black",
               imagePosition === "center"
                 ? "text-center md:text-center"
                 : imagePosition === "right"
                   ? "text-right"
                   : "text-left"
             )}
+            style={headingStyle}
             childClassName="pb-3"
           >
             {title.trim()}
@@ -57,10 +71,12 @@ export function IntroImageWide({
             duration={0.6}
             from={{ y: 16, opacity: 0 }}
             className={cn(
-              "mt-4 title-xsmall uppercase text-primary-black",
+              "mt-4 title-xsmall uppercase",
+              !textColor && "text-primary-black",
               imagePosition === "right" && "text-right ml-auto",
               imagePosition === "center" && "text-center mx-auto"
             )}
+            style={headingStyle}
           >
             {subtitle.trim()}
           </EditoReveal>
@@ -84,15 +100,17 @@ export function IntroImageWide({
           duration={0.6}
           from={{ y: "100%", opacity: 0 }}
           className={cn(
-            "text-primary-black/70 body-medium-edito col-span-full pr-16 md:px-0 md:col-span-4 md:col-start-6 mt-8 md:mt-36 order-2 md:order-3",
+            "body-medium-edito opacity-70 col-span-full pr-16 md:px-0 md:col-span-4 md:col-start-6 mt-8 md:mt-36 order-2 md:order-3",
+            !textColor && "text-primary-black",
             imagePosition === "right"
               ? "pr-48 md:col-start-4 md:col-span-5 text-right md:text-left"
               : imagePosition === "center"
                 ? "md:col-span-6 md:col-start-4 lg:w-3/4 lg:mx-auto text-center px-0"
                 : "pl-48"
           )}
+          style={textColor ? ({ color: textColor } as const) : undefined}
         >
-          <Typography variant="body-medium-edito" color="primary-black">
+          <Typography variant="body-medium-edito" {...bodyTypographyProps}>
             {renderTextWithLineBreaks(content.trim())}
           </Typography>
         </EditoReveal>

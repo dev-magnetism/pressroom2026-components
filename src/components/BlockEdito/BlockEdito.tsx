@@ -19,6 +19,8 @@ export function BlockEdito({
   content,
   imageUrl,
   imageAlt,
+  backgroundColor,
+  textColor,
   className,
 }: BlockEditoProps) {
   const Layout = useMemo(() => {
@@ -37,8 +39,14 @@ export function BlockEdito({
 
   return (
     <section
+      style={{
+        ...(backgroundColor ? { backgroundColor } : {}),
+        ...(textColor ? { color: textColor } : {}),
+      }}
       className={cn(
-        "s-blok-edito bg-white px-20 md:px-32 w-full text-primary-black",
+        "s-blok-edito px-20 md:px-32 w-full",
+        !backgroundColor && "bg-white",
+        !textColor && "text-primary-black",
         imageType,
         className
       )}
@@ -50,6 +58,7 @@ export function BlockEdito({
         content={content}
         imageUrl={imageUrl}
         imageAlt={imageAlt}
+        textColor={textColor}
       />
     </section>
   );

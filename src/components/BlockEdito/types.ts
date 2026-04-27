@@ -18,5 +18,9 @@ export type BlockEditoProps = {
   /** Image principale (remplace le média Storyblok). */
   imageUrl?: string;
   imageAlt?: string;
+  /** Couleur de fond de la section (valeur CSS). */
+  backgroundColor?: string;
+  /** Couleur de texte du bloc (valeur CSS). */
+  textColor?: string;
   className?: string;
 };

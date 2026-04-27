@@ -12,6 +12,10 @@ export type BlockBlocProps = {
   imageAlt?: string;
   videoUrl?: string;
   videoUrlMobile?: string;
+  /** Couleur de fond de la section (valeur CSS). */
+  backgroundColor?: string;
+  /** Couleur du texte (valeur CSS). */
+  textColor?: string;
   /** `2` : deux colonnes côte à côte (défaut). `1` : une colonne, texte centré. */
   textColumns?: 1 | 2;
   textLeft?: string;
@@ -26,6 +30,8 @@ export function BlockBloc({
   imageAlt = "",
   videoUrl,
   videoUrlMobile,
+  backgroundColor,
+  textColor,
   textColumns = 2,
   textLeft,
   textRight,
@@ -73,12 +79,22 @@ export function BlockBloc({
   const hasTextRight = Boolean(textRight?.trim());
   const hasText = hasTextLeft || hasTextRight;
   const isSingleTextColumn = textColumns === 1;
+  const headingStyle = textColor ? ({ color: textColor } as const) : undefined;
+  const bodyTypographyProps = textColor
+    ? ({ style: { color: textColor } } as const)
+    : ({ color: "primary-black" as const });
 
   return (
     <section
       ref={sectionRef}
+      style={{
+        ...(backgroundColor ? { backgroundColor } : {}),
+        ...(textColor ? { color: textColor } : {}),
+      }}
       className={cn(
-        "s-block-bloc bg-white px-20 md:px-32 w-full py-80 md:py-128 text-primary-black",
+        "s-block-bloc px-20 md:px-32 w-full py-80 md:py-128",
+        !backgroundColor && "bg-white",
+        !textColor && "text-primary-black",
         className
       )}
     >
@@ -87,7 +103,11 @@ export function BlockBloc({
           {title?.trim() ? (
             <Typography
               variant="title-medium"
-              className="!text-[48px] uppercase text-center font-light text-primary-black mx-auto"
+              className={cn(
+                "!text-[48px] uppercase text-center font-light mx-auto",
+                !textColor && "text-primary-black"
+              )}
+              style={headingStyle}
               as="h2"
             >
               {renderTextWithLineBreaks(title)}
@@ -96,9 +116,11 @@ export function BlockBloc({
           {subtitle?.trim() ? (
             <span
               className={cn(
-                "block text-center uppercase text-[24px] font-light leading-[120%] tracking-[-0.24px] font-rm-mono text-primary-black",
+                "block text-center uppercase text-[24px] font-light leading-[120%] tracking-[-0.24px] font-rm-mono",
+                !textColor && "text-primary-black",
                 title?.trim() && "mt-[20px]"
               )}
+              style={headingStyle}
             >
               {renderTextWithLineBreaks(subtitle)}
             </span>
@@ -145,7 +167,7 @@ export function BlockBloc({
                   <Typography
                     as="div"
                     variant="body-medium-edito"
-                    color="primary-black"
+                    {...bodyTypographyProps}
                     className="opacity-80"
                     weight="regular"
                   >
@@ -156,7 +178,7 @@ export function BlockBloc({
                   <Typography
                     as="div"
                     variant="body-medium-edito"
-                    color="primary-black"
+                    {...bodyTypographyProps}
                     className="opacity-80"
                     weight="regular"
                   >
@@ -171,7 +193,7 @@ export function BlockBloc({
                     <Typography
                       as="div"
                       variant="body-medium-edito"
-                      color="primary-black"
+                      {...bodyTypographyProps}
                       className="opacity-80"
                       weight="regular"
                     >
@@ -184,7 +206,7 @@ export function BlockBloc({
                     <Typography
                       as="div"
                       variant="body-medium-edito"
-                      color="primary-black"
+                      {...bodyTypographyProps}
                       className="opacity-80"
                       weight="regular"
                     >

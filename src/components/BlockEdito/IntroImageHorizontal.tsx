@@ -11,10 +11,22 @@ export function IntroImageHorizontal({
   content,
   imageUrl,
   imageAlt = "",
+  textColor,
 }: Pick<
   BlockEditoProps,
-  "imagePosition" | "title" | "subtitle" | "content" | "imageUrl" | "imageAlt"
+  | "imagePosition"
+  | "title"
+  | "subtitle"
+  | "content"
+  | "imageUrl"
+  | "imageAlt"
+  | "textColor"
 >) {
+  const headingStyle = textColor ? ({ color: textColor } as const) : undefined;
+  const bodyTypographyProps = textColor
+    ? ({ style: { color: textColor } } as const)
+    : ({ color: "primary-black" } as const);
+
   return (
     <div className="intro-image-horizontal grid-container py-64 md:py-96 px-0 gap-y-0">
       <div
@@ -30,9 +42,11 @@ export function IntroImageHorizontal({
             duration={0.6}
             from={{ y: 24, opacity: 0 }}
             className={cn(
-              "title-xlarge-medium headline-word-break uppercase text-primary-black pb-2",
+              "title-xlarge-medium headline-word-break uppercase pb-2",
+              !textColor && "text-primary-black",
               imagePosition === "right" && "text-right"
             )}
+            style={headingStyle}
             childClassName="pb-3"
           >
             {title.trim()}
@@ -44,9 +58,11 @@ export function IntroImageHorizontal({
             duration={0.6}
             from={{ y: 16, opacity: 0 }}
             className={cn(
-              "mt-4 title-xsmall uppercase text-primary-black",
+              "mt-4 title-xsmall uppercase",
+              !textColor && "text-primary-black",
               imagePosition === "right" && "text-right ml-auto"
             )}
+            style={headingStyle}
           >
             {subtitle.trim()}
           </EditoReveal>
@@ -81,9 +97,13 @@ export function IntroImageHorizontal({
               delay={0.3}
               duration={0.6}
               from={{ y: "100%", opacity: 0 }}
-              className="text-primary-black/70 body-medium-edito"
+              className={cn(
+                "body-medium-edito opacity-70",
+                !textColor && "text-primary-black"
+              )}
+              style={textColor ? ({ color: textColor } as const) : undefined}
             >
-              <Typography variant="body-medium-edito" color="primary-black">
+              <Typography variant="body-medium-edito" {...bodyTypographyProps}>
                 {renderTextWithLineBreaks(content.trim())}
               </Typography>
             </EditoReveal>
