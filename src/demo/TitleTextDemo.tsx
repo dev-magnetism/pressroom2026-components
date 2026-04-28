@@ -20,7 +20,7 @@ export function TitleTextDemo() {
       />
 
       <TitleText
-        layout="vertical"
+        layout="horizontal"
         title="An exceptional caliber"
         subtitle="AUTOMATIC WINDING"
         text={BODY}

@@ -70,19 +70,48 @@ const SLIDES: WatchesSlideItem[] = [
   },
 ];
 
+const EXTRA_SLIDES: WatchesSlideItem[] = [
+  {
+    name: "RM 11-03",
+    subtitle: "Chronograph",
+    hero_image: { filename: IMG_RM75_CLOSE, alt: "RM 75 close" },
+    product_image: { filename: IMG_BASEPLATE, alt: "Baseplate detail" },
+    models_label:
+      "Slide additionnelle pour tester la navigation sur une série plus longue.",
+  },
+  {
+    name: "RM 21-01",
+    subtitle: "Tourbillon",
+    hero_image: { filename: IMG_DIDIER, alt: "Didier visual" },
+    product_image: { filename: IMG_SAPPHIRE, alt: "Sapphire detail" },
+    models_label:
+      "Autre variation pour vérifier le passage d'un item à l'autre sans rupture.",
+  },
+  {
+    name: "RM 38-02",
+    subtitle: "Bubba Watson",
+    hero_image: { filename: IMG_LMC3, alt: "Le Mans Classic 3" },
+    product_image: { filename: IMG_LMC2, alt: "Le Mans Classic 2" },
+    models_label:
+      "Entrée de test supplémentaire avec médias différents.",
+  },
+];
+
+const SLIDES_LONG: WatchesSlideItem[] = [...SLIDES, ...EXTRA_SLIDES];
+
 export function BlockWatchesSlideDemo() {
   return (
     <div className="w-full">
       <BlockWatchesSlide
         keyPrefix="demo-watches-slide"
-        slides={SLIDES}
+        slides={SLIDES_LONG}
         title="Collection"
       />
       <BlockWatchesSlide
         backgroundUrl={BG}
         heroImagePerSlide={false} // Si `false`, une seule image : `backgroundUrl` (inchangée au changement de slide).
         keyPrefix="demo-watches-slide-fixed-hero"
-        slides={SLIDES}
+        slides={SLIDES_LONG}
         title="Grande image fixe"
       />
     </div>

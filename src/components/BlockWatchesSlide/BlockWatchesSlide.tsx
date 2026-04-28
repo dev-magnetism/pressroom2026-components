@@ -21,7 +21,6 @@ export type BlockWatchesSlideProps = {
    * Si `false`, une seule image : `backgroundUrl` (inchangée au changement de slide).
    */
   heroImagePerSlide?: boolean;
-  rtl?: boolean;
   /** Préfixe stable pour les clés React (optionnel). */
   keyPrefix?: string;
   className?: string;
@@ -42,7 +41,6 @@ export function BlockWatchesSlide({
   backgroundUrl,
   backgroundAlt = "",
   heroImagePerSlide = true,
-  rtl = false,
   keyPrefix = "watches-slide",
   className,
 }: BlockWatchesSlideProps) {
@@ -66,6 +64,26 @@ export function BlockWatchesSlide({
     perSlideAsset?.alt ??
     activeSlide?.product_image?.alt ??
     backgroundAlt;
+
+  const hasEnoughSlides = allSlides.length >= 5;
+  const hasBackgroundForFixedHero = heroImagePerSlide || Boolean(bgSrc);
+  const hasRequiredMedia = heroImagePerSlide
+    ? allSlides.every(
+        slide =>
+          Boolean(slide.hero_image?.filename) &&
+          Boolean(slide.product_image?.filename)
+      )
+    : allSlides.every(slide => Boolean(slide.product_image?.filename));
+
+  // Ce composant est volontairement borné à 2 scénarios supportés :
+  // 1) hero par slide avec media complet, 2) hero fixe (backgroundUrl) + vignettes produit.
+  if (
+    !hasEnoughSlides ||
+    !hasBackgroundForFixedHero ||
+    !hasRequiredMedia
+  ) {
+    return null;
+  }
 
   return (
     <section
@@ -130,25 +148,12 @@ export function BlockWatchesSlide({
       {allSlides.length > 0 ? (
         <>
           <div className="hidden md:block">
-            {allSlides.length > 4 ? (
-              <WatchSliderRight
-                title={title}
-                allSlides={allSlides}
-                activeIndex={activeIndex}
-                onSelectSlide={setActiveIndex}
-                rtl={rtl}
-              />
-            ) : (
-              <WatchSliderBottom
-                title={title}
-                keyPrefix={keyPrefix}
-                allSlides={allSlides}
-                activeIndex={activeIndex}
-                onSelectSlide={setActiveIndex}
-                interactionMode="hover"
-                rtl={rtl}
-              />
-            )}
+            <WatchSliderRight
+              title={title}
+              allSlides={allSlides}
+              activeIndex={activeIndex}
+              onSelectSlide={setActiveIndex}
+            />
           </div>
           <WatchSliderBottom
             title={title}
@@ -159,7 +164,6 @@ export function BlockWatchesSlide({
             activeIndex={activeIndex}
             onSelectSlide={setActiveIndex}
             interactionMode="click"
-            rtl={rtl}
           />
         </>
       ) : null}
