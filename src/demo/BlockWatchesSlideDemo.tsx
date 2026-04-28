@@ -98,6 +98,7 @@ const EXTRA_SLIDES: WatchesSlideItem[] = [
 ];
 
 const SLIDES_LONG: WatchesSlideItem[] = [...SLIDES, ...EXTRA_SLIDES];
+const SLIDES_SHORT: WatchesSlideItem[] = SLIDES_LONG.slice(0, 3);
 
 export function BlockWatchesSlideDemo() {
   return (
@@ -113,6 +114,11 @@ export function BlockWatchesSlideDemo() {
         keyPrefix="demo-watches-slide-fixed-hero"
         slides={SLIDES_LONG}
         title="Grande image fixe"
+      />
+      <BlockWatchesSlide
+        keyPrefix="demo-watches-slide-short"
+        slides={SLIDES_SHORT}
+        title="Collection (3 slides)"
       />
     </div>
   );

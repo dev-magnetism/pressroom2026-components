@@ -65,26 +65,6 @@ export function BlockWatchesSlide({
     activeSlide?.product_image?.alt ??
     backgroundAlt;
 
-  const hasEnoughSlides = allSlides.length >= 5;
-  const hasBackgroundForFixedHero = heroImagePerSlide || Boolean(bgSrc);
-  const hasRequiredMedia = heroImagePerSlide
-    ? allSlides.every(
-        slide =>
-          Boolean(slide.hero_image?.filename) &&
-          Boolean(slide.product_image?.filename)
-      )
-    : allSlides.every(slide => Boolean(slide.product_image?.filename));
-
-  // Ce composant est volontairement borné à 2 scénarios supportés :
-  // 1) hero par slide avec media complet, 2) hero fixe (backgroundUrl) + vignettes produit.
-  if (
-    !hasEnoughSlides ||
-    !hasBackgroundForFixedHero ||
-    !hasRequiredMedia
-  ) {
-    return null;
-  }
-
   return (
     <section
       className={cn(
